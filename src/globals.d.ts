@@ -3,6 +3,7 @@ declare global {
   var process: {
     env: { [key: string]: string | undefined };
     exit: (code?: number) => never;
+    on: (event: string, listener: (...args: any[]) => void) => any;
   };
   var console: {
     log: (...args: any[]) => void;
