@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 // User types
 export interface User {
   id: string;
