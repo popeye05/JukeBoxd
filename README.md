@@ -1,4 +1,4 @@
-# 🎵 JukeBoxd
+# 🎵 JukeBoxd(My First Deployed App with Agentic IDE, Docker, PostGreSQL,Redis)
 
 > **A social music discovery platform where music lovers connect, rate, and review albums**
 
@@ -26,11 +26,6 @@
 - **Activity Feed** - See what your friends are rating and reviewing
 - **User Profiles** - Showcase your musical journey and statistics
 
-### 🎨 **Beautiful Design**
-- **Dark Theme** - Easy on the eyes with custom JukeBoxd branding
-- **Mobile Responsive** - Perfect experience on all devices
-- **Letterboxd-Inspired** - Familiar, intuitive interface for film lovers
-
 ---
 
 ## 🚀 Live Demo
@@ -46,7 +41,7 @@
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Tech Stack(I Used Kiro.dev not for vibe coding but as a agentic IDE)
 
 ### **Backend**
 - **Node.js** + **Express** - RESTful API server
@@ -275,12 +270,6 @@ Have an idea? [Create a feature request](https://github.com/popeye05/jukeboxd/is
 
 ---
 
-## 📜 License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
----
-
 ## 🙏 Acknowledgments
 
 - **Last.fm** - For providing free access to their incredible music database
@@ -301,7 +290,7 @@ If you found JukeBoxd useful or interesting, please consider giving it a star! I
 
 <div align="center">
 
-**🎵 Made with ❤️ for music lovers everywhere 🎵**
+**🎵 Made with ❤️ for music lovers everywhere, popeye05 🎵**
 
 [Live Demo](https://jukeboxd-app.onrender.com) • [Report Bug](https://github.com/popeye05/jukeboxd/issues) • [Request Feature](https://github.com/popeye05/jukeboxd/issues)
 
