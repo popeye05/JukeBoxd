@@ -37,6 +37,7 @@
     }
   },
   "include": [
+    "src/globals.d.ts",
     "src/server.ts",
     "src/config/**/*",
     "src/middleware/**/*",

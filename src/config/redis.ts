@@ -1,9 +1,9 @@
-import { createClient, RedisClientType } from 'redis';
+import { createClient } from 'redis';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-let redisClient: RedisClientType;
+let redisClient: any;
 
 export const connectRedis = async (): Promise<void> => {
   const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
@@ -22,19 +22,19 @@ export const connectRedis = async (): Promise<void> => {
 
   redisClient = createClient(clientOptions);
 
-  redisClient.on('error', (error) => {
+  (redisClient as any).on('error', (error: any) => {
     console.error('Redis connection error:', error);
   });
 
-  redisClient.on('connect', () => {
+  (redisClient as any).on('connect', () => {
     console.log('Redis client connected');
   });
 
-  redisClient.on('ready', () => {
+  (redisClient as any).on('ready', () => {
     console.log('Redis client ready');
   });
 
-  redisClient.on('end', () => {
+  (redisClient as any).on('end', () => {
     console.log('Redis client disconnected');
   });
 
@@ -47,7 +47,7 @@ export const connectRedis = async (): Promise<void> => {
   }
 };
 
-export const getRedisClient = (): RedisClientType => {
+export const getRedisClient = (): any => {
   if (!redisClient) {
     throw new Error('Redis not initialized. Call connectRedis() first.');
   }
