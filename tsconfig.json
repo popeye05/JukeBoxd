@@ -42,6 +42,15 @@
     "node_modules",
     "dist",
     "**/*.test.ts",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "src/test/**/*",
+    "src/tests/**/*",
+    "src/validation/**/*",
+    "src/verify-*.ts",
+    "src/password-security.standalone.test.ts",
+    "src/setup.test.ts",
+    "src/server.test.ts",
+    "scripts/**/*",
+    "frontend/**/*"
   ]
 }

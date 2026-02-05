@@ -24,11 +24,6 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   const [loading, setLoading] = useState(false);
   const [checkingStatus, setCheckingStatus] = useState(true);
 
-  // Don't show follow button for own profile
-  if (!user || user.id === userId) {
-    return null;
-  }
-
   useEffect(() => {
     const checkFollowStatus = async () => {
       try {
@@ -44,6 +39,11 @@ const FollowButton: React.FC<FollowButtonProps> = ({
 
     checkFollowStatus();
   }, [userId]);
+
+  // Don't show follow button for own profile
+  if (!user || user.id === userId) {
+    return null;
+  }
 
   const handleFollowToggle = async () => {
     if (loading) return;

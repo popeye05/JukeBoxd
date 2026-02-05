@@ -1,0 +1,35 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "sourceMap": false,
+    "declaration": false,
+    "declarationMap": false,
+    "removeComments": true
+  },
+  "include": [
+    "src/server.ts",
+    "src/config/**/*",
+    "src/middleware/**/*",
+    "src/models/**/*",
+    "src/routes/**/*",
+    "src/services/**/*",
+    "src/types/**/*",
+    "src/scripts/migrate.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.property.test.ts",
+    "src/test/**/*",
+    "src/tests/**/*",
+    "src/validation/**/*",
+    "src/verify-*.ts",
+    "src/password-security.standalone.test.ts",
+    "src/setup.test.ts",
+    "src/server.test.ts",
+    "scripts/**/*",
+    "frontend/**/*"
+  ]
+}

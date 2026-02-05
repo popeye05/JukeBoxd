@@ -205,11 +205,11 @@ const UserProfilePage: React.FC = () => {
                         <Grid size={{ xs: 12, sm: 6, md: 4 }} key={rating.id}>
                           <Card variant="outlined">
                             <CardContent>
-                              <Typography variant="h6" noWrap title={rating.album?.name || rating.albumName}>
-                                {rating.album?.name || rating.albumName || 'Unknown Album'}
+                              <Typography variant="h6" noWrap title={rating.album?.name}>
+                                {rating.album?.name || 'Unknown Album'}
                               </Typography>
                               <Typography variant="body2" color="text.secondary" noWrap>
-                                by {rating.album?.artist || rating.albumArtist || 'Unknown Artist'}
+                                by {rating.album?.artist || 'Unknown Artist'}
                               </Typography>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
                                 <Star sx={{ color: '#FFD700', fontSize: 20 }} />
@@ -253,10 +253,10 @@ const UserProfilePage: React.FC = () => {
                           <Card variant="outlined">
                             <CardContent>
                               <Typography variant="h6" gutterBottom>
-                                {review.album?.name || review.albumName || 'Unknown Album'}
+                                {review.album?.name || 'Unknown Album'}
                               </Typography>
                               <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                                by {review.album?.artist || review.albumArtist || 'Unknown Artist'}
+                                by {review.album?.artist || 'Unknown Artist'}
                               </Typography>
                               <Typography variant="body1" paragraph sx={{ mt: 2 }}>
                                 {review.content}
