@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: jukeboxd-app
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: LASTFM_API_KEY
+        value: demo-mode
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
+      - key: LOG_LEVEL
+        value: info
+
+databases:
+  - name: jukeboxd-db
+    plan: free
+    
+  - name: jukeboxd-redis
+    plan: free
