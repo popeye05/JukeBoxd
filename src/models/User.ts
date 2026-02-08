@@ -41,7 +41,7 @@ export class UserModel {
    */
   static async findByUsername(username: string): Promise<User | null> {
     const result: QueryResult<any> = await query(
-      'SELECT id, username, email, password_hash, created_at, updated_at FROM users WHERE username = $1',
+      'SELECT id, username, email, password_hash, bio, avatar_url, display_name, created_at, updated_at FROM users WHERE username = $1',
       [username]
     );
 
@@ -55,6 +55,9 @@ export class UserModel {
       username: row.username,
       email: row.email,
       passwordHash: row.password_hash,
+      bio: row.bio,
+      avatarUrl: row.avatar_url,
+      displayName: row.display_name,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at)
     };
@@ -65,7 +68,7 @@ export class UserModel {
    */
   static async findByEmail(email: string): Promise<User | null> {
     const result: QueryResult<any> = await query(
-      'SELECT id, username, email, password_hash, created_at, updated_at FROM users WHERE email = $1',
+      'SELECT id, username, email, password_hash, bio, avatar_url, display_name, created_at, updated_at FROM users WHERE email = $1',
       [email]
     );
 
@@ -79,6 +82,9 @@ export class UserModel {
       username: row.username,
       email: row.email,
       passwordHash: row.password_hash,
+      bio: row.bio,
+      avatarUrl: row.avatar_url,
+      displayName: row.display_name,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at)
     };
@@ -89,7 +95,7 @@ export class UserModel {
    */
   static async findById(id: string): Promise<User | null> {
     const result: QueryResult<any> = await query(
-      'SELECT id, username, email, password_hash, created_at, updated_at FROM users WHERE id = $1',
+      'SELECT id, username, email, password_hash, bio, avatar_url, display_name, created_at, updated_at FROM users WHERE id = $1',
       [id]
     );
 
@@ -103,6 +109,9 @@ export class UserModel {
       username: row.username,
       email: row.email,
       passwordHash: row.password_hash,
+      bio: row.bio,
+      avatarUrl: row.avatar_url,
+      displayName: row.display_name,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at)
     };
@@ -123,6 +132,9 @@ export class UserModel {
       id: user.id,
       username: user.username,
       email: user.email,
+      bio: user.bio || null,
+      avatarUrl: user.avatarUrl || null,
+      displayName: user.displayName || null,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt
     };
@@ -165,7 +177,56 @@ export class UserModel {
       [id]
     );
   }
+  /**
+ * Update user profile
+ */
+  static async update(id: string, updates: Partial<User>): Promise<User | null> {
+    const fields: string[] = [];
+    const values: any[] = [];
+    let paramCount = 1;
 
+    if (updates.bio !== undefined) {
+      fields.push(`bio = $${paramCount++}`);
+      values.push(updates.bio);
+    }
+    if (updates.avatarUrl !== undefined) {
+      fields.push(`avatar_url = $${paramCount++}`);
+      values.push(updates.avatarUrl);
+    }
+    if (updates.displayName !== undefined) {
+      fields.push(`display_name = $${paramCount++}`);
+      values.push(updates.displayName);
+    }
+
+    if (fields.length === 0) {
+      return await this.findById(id);
+    }
+
+    fields.push(`updated_at = CURRENT_TIMESTAMP`);
+    values.push(id); // ID is the last parameter
+
+    const result: QueryResult<any> = await query(
+      `UPDATE users SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`,
+      values
+    );
+
+    if (result.rows.length === 0) {
+      return null;
+    }
+
+    const row = result.rows[0];
+    return {
+      id: row.id,
+      username: row.username,
+      email: row.email,
+      passwordHash: row.password_hash,
+      bio: row.bio,
+      avatarUrl: row.avatar_url,
+      displayName: row.display_name,
+      createdAt: new Date(row.created_at),
+      updatedAt: new Date(row.updated_at)
+    };
+  }
   /**
    * Delete user by ID
    */

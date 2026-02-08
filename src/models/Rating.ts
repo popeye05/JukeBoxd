@@ -281,6 +281,22 @@ export class RatingModel {
   }
 
   /**
+   * Get rating count for a user
+   */
+  static async getRatingCountByUser(userId: string): Promise<number> {
+    const result: QueryResult<{ count: string }> = await query(
+      'SELECT COUNT(*) as count FROM ratings WHERE user_id = $1',
+      [userId]
+    );
+
+    if (result.rows.length === 0 || !result.rows[0]) {
+      return 0;
+    }
+
+    return parseInt(result.rows[0].count);
+  }
+
+  /**
    * Delete rating by ID
    */
   static async deleteById(id: string): Promise<boolean> {

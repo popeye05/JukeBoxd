@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import { AuthService } from '@/services/AuthService';
+import { UserModel } from '@/models/User';
 import { authenticateToken, getCurrentUser } from '@/middleware/auth';
 import { asyncHandler, createError } from '@/middleware/errorHandler';
 import { ApiResponse } from '@/types';
@@ -18,7 +19,7 @@ router.post('/register', [
     .withMessage('Username must be between 3 and 50 characters')
     .matches(/^[a-zA-Z0-9_-]+$/)
     .withMessage('Username can only contain letters, numbers, underscores, and hyphens'),
-  
+
   body('email')
     .trim()
     .isEmail()
@@ -26,7 +27,7 @@ router.post('/register', [
     .isLength({ max: 255 })
     .withMessage('Email must be less than 255 characters')
     .normalizeEmail(),
-  
+
   body('password')
     .isLength({ min: 8, max: 128 })
     .withMessage('Password must be between 8 and 128 characters')
@@ -73,7 +74,7 @@ router.post('/login', [
     .trim()
     .notEmpty()
     .withMessage('Username or email is required'),
-  
+
   body('password')
     .notEmpty()
     .withMessage('Password is required')
@@ -143,7 +144,52 @@ router.get('/me', authenticateToken, asyncHandler(async (req: Request, res: Resp
     timestamp: new Date().toISOString()
   };
 
-  res.status(200).json(response);
+
+}));
+
+/**
+ * PUT /api/auth/me/profile
+ * Update current user profile
+ */
+router.put('/me/profile', [
+  authenticateToken,
+  body('bio').optional().trim().isLength({ max: 500 }).withMessage('Bio must be less than 500 characters'),
+  body('avatarUrl').optional().trim().isURL().withMessage('Invalid URL format for avatar'),
+  body('displayName').optional().trim().isLength({ max: 50 }).withMessage('Display name must be less than 50 characters')
+], asyncHandler(async (req: Request, res: Response) => {
+  // Check validation results
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = createError(
+      `Validation failed: ${errors.array().map(e => e.msg).join(', ')}`,
+      400
+    );
+    throw error;
+  }
+
+  const user = getCurrentUser(req);
+  const { bio, avatarUrl, displayName } = req.body;
+
+  try {
+    const updatedUser = await UserModel.update(user.id, { bio, avatarUrl, displayName });
+
+    if (!updatedUser) {
+      throw createError('User not found', 404);
+    }
+
+    const response: ApiResponse = {
+      success: true,
+      data: {
+        user: UserModel.toProfile(updatedUser),
+        message: 'Profile updated successfully'
+      },
+      timestamp: new Date().toISOString()
+    };
+
+    res.status(200).json(response);
+  } catch (error: any) {
+    throw error;
+  }
 }));
 
 /**

@@ -6,6 +6,9 @@ export interface User {
   username: string;
   email: string;
   passwordHash: string;
+  bio?: string | null;
+  avatarUrl?: string | null;
+  displayName?: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -14,6 +17,9 @@ export interface UserProfile {
   id: string;
   username: string;
   email: string;
+  bio?: string | null;
+  avatarUrl?: string | null;
+  displayName?: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

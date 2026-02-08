@@ -1,5 +1,7 @@
 import { FollowModel } from '@/models/Follow';
 import { UserModel } from '@/models/User';
+import { RatingModel } from '@/models/Rating';
+import { ReviewModel } from '@/models/Review';
 import { DataPersistenceService } from './DataPersistenceService';
 import { Follow, UserProfile } from '@/types';
 
@@ -25,9 +27,9 @@ export class SocialService {
       // Create the follow relationship
       return await FollowModel.create(followerId, followeeId);
     },
-    // Validation query to ensure the follow was persisted
-    'SELECT id FROM follows WHERE follower_id = $1 AND followee_id = $2',
-    [followerId, followeeId]);
+      // Validation query to ensure the follow was persisted
+      'SELECT id FROM follows WHERE follower_id = $1 AND followee_id = $2',
+      [followerId, followeeId]);
   }
 
   /**
@@ -97,24 +99,30 @@ export class SocialService {
   /**
    * Get user profile with social stats
    */
-  static async getUserProfileWithStats(userId: string): Promise<UserProfile & { 
-    followerCount: number; 
-    followingCount: number; 
+  static async getUserProfileWithStats(userId: string): Promise<UserProfile & {
+    followersCount: number;
+    followingCount: number;
+    ratingsCount: number;
+    reviewsCount: number;
   }> {
     const user = await UserModel.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }
 
-    const [followerCount, followingCount] = await Promise.all([
+    const [followerCount, followingCount, ratingsCount, reviewsCount] = await Promise.all([
       this.getFollowerCount(userId),
-      this.getFollowingCount(userId)
+      this.getFollowingCount(userId),
+      RatingModel.getRatingCountByUser(userId),
+      ReviewModel.getReviewCountByUser(userId)
     ]);
 
     return {
       ...UserModel.toProfile(user),
-      followerCount,
-      followingCount
+      followersCount: followerCount,
+      followingCount,
+      ratingsCount,
+      reviewsCount
     };
   }
 
@@ -138,7 +146,7 @@ export class SocialService {
   static async getFollowSuggestions(userId: string, limit: number = 10): Promise<UserProfile[]> {
     // For now, just return users that the current user is not following
     // In a real implementation, you might consider mutual connections, similar interests, etc.
-    
+
     const following = await FollowModel.getFollowing(userId);
     const followingIds = following.map(user => user.id);
     followingIds.push(userId); // Don't suggest the user themselves
@@ -180,12 +188,49 @@ export class SocialService {
     );
 
     const followingSet = new Set(result.rows.map((row: any) => row.followee_id));
-    
+
     const followingStatus: { [key: string]: boolean } = {};
     followeeIds.forEach(id => {
       followingStatus[id] = followingSet.has(id);
     });
 
     return followingStatus;
+  }
+  /**
+   * Search for users by username or display name
+   */
+  static async searchUsers(queryStr: string, limit: number = 20): Promise<UserProfile[]> {
+    if (!queryStr || queryStr.trim().length === 0) {
+      return [];
+    }
+
+    const { query } = await import('@/config/database');
+    const searchPattern = `%${queryStr}%`;
+
+    const result = await query(
+      `SELECT id, username, email, bio, avatar_url, display_name, created_at, updated_at 
+       FROM users 
+       WHERE username ILIKE $1 OR display_name ILIKE $1 
+       ORDER BY 
+         CASE WHEN username ILIKE $1 THEN 0 ELSE 1 END, 
+         username 
+       LIMIT $2`,
+      [searchPattern, limit]
+    );
+
+    return result.rows.map((row: any) => ({
+      id: row.id,
+      username: row.username,
+      email: row.email,
+      bio: row.bio,
+      avatarUrl: row.avatar_url,
+      displayName: row.display_name,
+      createdAt: new Date(row.created_at),
+      updatedAt: new Date(row.updated_at),
+      followersCount: 0, // These would need expensive separate queries or joins. 
+      followingCount: 0, // For search results list, strictly speaking we might not need them immediately, 
+      ratingsCount: 0,   // or we can load them if needed. For now, returning basic profile.
+      reviewsCount: 0    // The interface might require them though.
+    })) as UserProfile[]; // Cast because we might be missing counts if defined in UserProfile
   }
 }

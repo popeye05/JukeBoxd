@@ -1,14 +1,7 @@
 import api from './api';
-import { User, UserProfile, Follow, ApiResponse } from '../types';
+import { User, UserProfile, UserProfileWithStats, Follow, ApiResponse } from '../types';
 
 export interface SocialStats {
-  followersCount: number;
-  followingCount: number;
-  ratingsCount: number;
-  reviewsCount: number;
-}
-
-export interface UserProfileWithStats extends UserProfile {
   followersCount: number;
   followingCount: number;
   ratingsCount: number;
@@ -101,6 +94,14 @@ class SocialApi {
   async getUserSuggestions(limit: number = 10): Promise<User[]> {
     const response = await api.get<ApiResponse<UserSuggestionsResponse>>(`/social/suggestions?limit=${limit}`);
     return response.data.data.suggestions;
+  }
+
+  /**
+   * Search for users by query
+   */
+  async searchUsers(query: string, limit: number = 20): Promise<User[]> {
+    const response = await api.get<ApiResponse<UserSearchResponse>>(`/social/search?q=${encodeURIComponent(query)}&limit=${limit}`);
+    return response.data.data.users;
   }
 }
 

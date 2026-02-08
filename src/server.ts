@@ -29,16 +29,16 @@ app.use(helmet({
   contentSecurityPolicy: process.env.NODE_ENV === 'production' ? {} : false,
 }));
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
+  origin: process.env.NODE_ENV === 'production'
     ? true  // Allow same origin in production
-    : ['http://localhost:3000', 'http://localhost:3001'],
+    : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
   credentials: true
 }));
 
 // Rate limiting
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '1000'),
   message: 'Too many requests from this IP, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
@@ -56,10 +56,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Health check endpoint
 app.get('/health', (_req: any, res: any) => {
-  res.status(200).json({ 
-    status: 'OK', 
+  res.status(200).json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV 
+    environment: process.env.NODE_ENV
   });
 });
 
@@ -74,7 +74,7 @@ app.use('/api/feed', feedRoutes);
 // Serve static files from React build in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../frontend/build')));
-  
+
   // Handle React routing - send all non-API requests to React app
   app.get('*', (_req: any, res: any) => {
     res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
@@ -92,9 +92,13 @@ async function startServer() {
     await connectDatabase();
     console.log('✅ Database connected successfully');
 
-    // Connect to Redis
-    await connectRedis();
-    console.log('✅ Redis connected successfully');
+    // Connect to Redis (optional - will fallback to memory store)
+    try {
+      await connectRedis();
+      console.log('✅ Redis connected successfully');
+    } catch (redisError: any) {
+      console.warn('⚠️ Redis connection failed, using in-memory session store');
+    }
 
     // Start HTTP server
     app.listen(PORT, () => {

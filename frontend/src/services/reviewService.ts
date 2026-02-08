@@ -22,6 +22,12 @@ export const reviewService = {
   // Get user's reviews
   getUserReviews: async (userId: string): Promise<Review[]> => {
     const response = await api.get(`/reviews/user/${userId}`);
-    return response.data.data;
+    return response.data.data.reviews;
+  },
+
+  // Get recent reviews
+  getRecentReviews: async (limit: number = 6): Promise<Review[]> => {
+    const response = await api.get(`/reviews/recent?limit=${limit}`);
+    return response.data.data.reviews;
   },
 };

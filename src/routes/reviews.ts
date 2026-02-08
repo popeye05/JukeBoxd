@@ -20,7 +20,7 @@ router.post('/', [
     .withMessage('Album ID is required')
     .isUUID()
     .withMessage('Invalid album ID format'),
-  
+
   body('content')
     .trim()
     .notEmpty()
@@ -90,7 +90,7 @@ router.put('/:reviewId', [
     .withMessage('Review ID is required')
     .isUUID()
     .withMessage('Invalid review ID format'),
-  
+
   body('content')
     .trim()
     .notEmpty()
@@ -132,7 +132,7 @@ router.put('/:reviewId', [
 
     // Update review
     const updatedReview = await ReviewService.updateReview(reviewId!, content);
-    
+
     if (!updatedReview) {
       throw createError('Failed to update review', 500);
     }
@@ -192,7 +192,7 @@ router.delete('/:reviewId', [
 
     // Delete the review
     const deleted = await ReviewService.deleteReview(reviewId!);
-    
+
     if (!deleted) {
       throw createError('Failed to delete review', 500);
     }
@@ -245,6 +245,30 @@ router.get('/user/:userId', [
       data: {
         reviews,
         userId,
+        total: reviews.length
+      },
+      timestamp: new Date().toISOString()
+    };
+
+    res.status(200).json(response);
+  } catch (error: any) {
+    throw error;
+  }
+}));
+
+/**
+ * GET /api/reviews/recent
+ * Get recent reviews for home page
+ */
+router.get('/recent', asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 6;
+    const reviews = await ReviewService.getRecentReviews(limit);
+
+    const response: ApiResponse = {
+      success: true,
+      data: {
+        reviews,
         total: reviews.length
       },
       timestamp: new Date().toISOString()

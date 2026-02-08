@@ -11,21 +11,21 @@ export const theme = createTheme({
       contrastText: '#000000',
     },
     secondary: {
-      main: '#FF6B35', // Orange from the logo bars
-      light: '#FF8A65',
-      dark: '#E64A19',
+      main: '#40bcf4', // Letterboxd Blue/Greenish
+      light: '#66cfff',
+      dark: '#008ba3',
     },
     background: {
-      default: '#0A0A0A', // Pure black like the logo background
-      paper: '#1A1A1A', // Slightly lighter for cards
+      default: '#14181c', // Letterboxd Dark Grey
+      paper: '#1e2328', // Slightly lighter grey
     },
     text: {
-      primary: '#FFFFFF', // White like the logo text
-      secondary: '#CCCCCC',
+      primary: '#ffffff',
+      secondary: '#9ab', // Cool grey
     },
-    divider: '#333333',
+    divider: '#2c3440',
     error: {
-      main: '#FF6B6B',
+      main: '#ff8040', // Orange-red
     },
     warning: {
       main: '#FFD700', // Use brand yellow for warnings
@@ -89,7 +89,7 @@ export const theme = createTheme({
     },
   },
   shape: {
-    borderRadius: 6,
+    borderRadius: 4,
   },
   components: {
     MuiCssBaseline: {

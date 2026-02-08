@@ -36,9 +36,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
     }
 
     try {
+      console.log('Attempting login with:', { usernameOrEmail: usernameOrEmail.trim(), passwordLength: password.length });
       await login(usernameOrEmail.trim(), password);
+      console.log('Login successful!');
     } catch (err: any) {
-      const errorMessage = err.response?.data?.error?.message || 'Login failed. Please try again.';
+      console.error('Login error:', err);
+      console.error('Error response:', err.response);
+      const errorMessage = err.response?.data?.error?.message || err.message || 'Login failed. Please try again.';
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -51,7 +55,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
         <Typography variant="h4" component="h1" gutterBottom align="center">
           Sign In
         </Typography>
-        
+
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
@@ -71,7 +75,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
             disabled={loading}
             placeholder="Enter your username or email"
           />
-          
+
           <TextField
             fullWidth
             label="Password"

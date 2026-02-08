@@ -10,7 +10,7 @@ export class ReviewModel {
     if (content === null || content === undefined || typeof content !== 'string') {
       throw new Error('Review content is required');
     }
-    
+
     // Check if content is only whitespace
     if (content.trim().length === 0) {
       throw new Error('Review content cannot be empty or contain only whitespace');
@@ -262,6 +262,52 @@ export class ReviewModel {
   }
 
   /**
+   * Get recent reviews with album and user details
+   */
+  static async findRecentWithDetails(limit: number = 10): Promise<ReviewWithDetails[]> {
+    const result: QueryResult<any> = await query(
+      `SELECT 
+        r.id, r.user_id, r.album_id, r.content, r.created_at, r.updated_at,
+        u.id as user_id, u.username, u.email, u.created_at as user_created_at, u.updated_at as user_updated_at,
+        a.id as album_id, a.spotify_id, a.name as album_name, a.artist, a.release_date, a.image_url, a.spotify_url, 
+        a.created_at as album_created_at, a.updated_at as album_updated_at
+       FROM reviews r
+       JOIN users u ON r.user_id = u.id
+       JOIN albums a ON r.album_id = a.id
+       ORDER BY r.created_at DESC
+       LIMIT $1`,
+      [limit]
+    );
+
+    return result.rows.map(row => ({
+      id: row.id,
+      userId: row.user_id,
+      albumId: row.album_id,
+      content: row.content,
+      createdAt: new Date(row.created_at),
+      updatedAt: new Date(row.updated_at),
+      user: {
+        id: row.user_id,
+        username: row.username,
+        email: row.email,
+        createdAt: new Date(row.user_created_at),
+        updatedAt: new Date(row.user_updated_at)
+      },
+      album: {
+        id: row.album_id,
+        spotifyId: row.spotify_id,
+        name: row.album_name,
+        artist: row.artist,
+        releaseDate: new Date(row.release_date),
+        imageUrl: row.image_url,
+        spotifyUrl: row.spotify_url,
+        createdAt: new Date(row.album_created_at),
+        updatedAt: new Date(row.album_updated_at)
+      }
+    }));
+  }
+
+  /**
    * Update review content
    */
   static async updateContent(id: string, content: string): Promise<Review | null> {
@@ -297,6 +343,22 @@ export class ReviewModel {
     const result: QueryResult<{ count: string }> = await query(
       'SELECT COUNT(*) as count FROM reviews WHERE album_id = $1',
       [albumId]
+    );
+
+    if (result.rows.length === 0 || !result.rows[0]) {
+      return 0;
+    }
+
+    return parseInt(result.rows[0].count);
+  }
+
+  /**
+   * Get review count for a user
+   */
+  static async getReviewCountByUser(userId: string): Promise<number> {
+    const result: QueryResult<{ count: string }> = await query(
+      'SELECT COUNT(*) as count FROM reviews WHERE user_id = $1',
+      [userId]
     );
 
     if (result.rows.length === 0 || !result.rows[0]) {

@@ -4,9 +4,9 @@ import { getToken, removeToken } from '../utils/tokenManager';
 // Create axios instance with base configuration
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || (
-    process.env.NODE_ENV === 'production' 
+    process.env.NODE_ENV === 'production'
       ? '/api'  // In production, API is served from same domain
-      : 'http://localhost:3000/api'  // In development, backend runs on port 3000
+      : 'http://localhost:3001/api'  // In development, backend runs on port 3001
   ),
   timeout: 10000,
   headers: {
@@ -39,7 +39,7 @@ api.interceptors.response.use(
       error.code = 'NETWORK_ERROR';
       error.message = 'Network error. Please check your connection and try again.';
     }
-    
+
     // Handle specific HTTP status codes
     if (error.response?.status === 401) {
       // Handle unauthorized access
@@ -52,7 +52,7 @@ api.interceptors.response.use(
       // Handle server errors
       error.message = 'Server error. Please try again later.';
     }
-    
+
     return Promise.reject(error);
   }
 );

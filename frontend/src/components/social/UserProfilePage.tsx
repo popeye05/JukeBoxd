@@ -102,7 +102,7 @@ const UserProfilePage: React.FC = () => {
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
-    
+
     // Lazy load data when tab is selected
     if (newValue === 1 && userRatings.length === 0) {
       fetchUserRatings();
@@ -157,123 +157,7 @@ const UserProfilePage: React.FC = () => {
             />
           </Grid>
 
-          {/* Content Tabs */}
-          <Grid size={12}>
-            <Card>
-              <CardContent>
-                <Tabs
-                  value={tabValue}
-                  onChange={handleTabChange}
-                  aria-label="profile content tabs"
-                  variant="scrollable"
-                  scrollButtons="auto"
-                >
-                  <Tab label="Discover Users" />
-                  <Tab label={`Ratings (${userRatings.length})`} />
-                  <Tab label={`Reviews (${userReviews.length})`} />
-                </Tabs>
-
-                <TabPanel value={tabValue} index={0}>
-                  <UserDiscovery
-                    title="Discover New Users"
-                    limit={6}
-                    showRefresh={true}
-                  />
-                </TabPanel>
-
-                <TabPanel value={tabValue} index={1}>
-                  {ratingsLoading ? (
-                    <Box display="flex" justifyContent="center" py={4}>
-                      <CircularProgress />
-                    </Box>
-                  ) : userRatings.length === 0 ? (
-                    <Box textAlign="center" py={4}>
-                      <Star sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
-                      <Typography variant="h6" color="text.secondary" gutterBottom>
-                        {isOwnProfile ? 'No ratings yet' : 'No ratings from this user'}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {isOwnProfile 
-                          ? 'Start rating albums to build your music profile!'
-                          : 'This user hasn\'t rated any albums yet.'
-                        }
-                      </Typography>
-                    </Box>
-                  ) : (
-                    <Grid container spacing={2}>
-                      {userRatings.map((rating) => (
-                        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={rating.id}>
-                          <Card variant="outlined">
-                            <CardContent>
-                              <Typography variant="h6" noWrap title={rating.album?.name}>
-                                {rating.album?.name || 'Unknown Album'}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary" noWrap>
-                                by {rating.album?.artist || 'Unknown Artist'}
-                              </Typography>
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
-                                <Star sx={{ color: '#FFD700', fontSize: 20 }} />
-                                <Typography variant="body1" fontWeight="bold">
-                                  {rating.rating}/5
-                                </Typography>
-                              </Box>
-                              <Typography variant="caption" color="text.secondary">
-                                {new Date(rating.createdAt).toLocaleDateString()}
-                              </Typography>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      ))}
-                    </Grid>
-                  )}
-                </TabPanel>
-
-                <TabPanel value={tabValue} index={2}>
-                  {reviewsLoading ? (
-                    <Box display="flex" justifyContent="center" py={4}>
-                      <CircularProgress />
-                    </Box>
-                  ) : userReviews.length === 0 ? (
-                    <Box textAlign="center" py={4}>
-                      <RateReview sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
-                      <Typography variant="h6" color="text.secondary" gutterBottom>
-                        {isOwnProfile ? 'No reviews yet' : 'No reviews from this user'}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {isOwnProfile 
-                          ? 'Start reviewing albums to share your thoughts!'
-                          : 'This user hasn\'t written any reviews yet.'
-                        }
-                      </Typography>
-                    </Box>
-                  ) : (
-                    <Grid container spacing={2}>
-                      {userReviews.map((review) => (
-                        <Grid size={12} key={review.id}>
-                          <Card variant="outlined">
-                            <CardContent>
-                              <Typography variant="h6" gutterBottom>
-                                {review.album?.name || 'Unknown Album'}
-                              </Typography>
-                              <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                                by {review.album?.artist || 'Unknown Artist'}
-                              </Typography>
-                              <Typography variant="body1" paragraph sx={{ mt: 2 }}>
-                                {review.content}
-                              </Typography>
-                              <Typography variant="caption" color="text.secondary">
-                                {new Date(review.createdAt).toLocaleDateString()}
-                              </Typography>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      ))}
-                    </Grid>
-                  )}
-                </TabPanel>
-              </CardContent>
-            </Card>
-          </Grid>
+          {/* Content Tabs removed as per user request to drop Rating/Review tabs and integrate into main profile */}
         </Grid>
       </Box>
     </Container>

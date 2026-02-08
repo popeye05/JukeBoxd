@@ -11,7 +11,7 @@ export const ratingService = {
   // Get user's ratings
   getUserRatings: async (userId: string): Promise<Rating[]> => {
     const response = await api.get(`/ratings/user/${userId}`);
-    return response.data.data;
+    return response.data.data.ratings;
   },
 
   // Delete rating

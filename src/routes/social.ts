@@ -306,4 +306,29 @@ router.get('/suggestions', [
   }
 }));
 
+/**
+ * GET /api/social/search
+ * Search users
+ */
+router.get('/search', [
+  authenticateToken
+], asyncHandler(async (req: Request, res: Response) => {
+  const queryStr = req.query.q as string;
+  const limit = parseInt(req.query.limit as string) || 20;
+
+  try {
+    const users = await SocialService.searchUsers(queryStr, limit);
+
+    const response: ApiResponse = {
+      success: true,
+      data: { users },
+      timestamp: new Date().toISOString()
+    };
+
+    res.status(200).json(response);
+  } catch (error: any) {
+    throw error;
+  }
+}));
+
 export default router;

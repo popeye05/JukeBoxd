@@ -3,6 +3,9 @@ export interface User {
   id: string;
   username: string;
   email: string;
+  bio?: string;
+  avatarUrl?: string;
+  displayName?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -106,4 +109,16 @@ export interface UserProfile extends User {
   followingCount: number;
   ratingsCount: number;
   reviewsCount: number;
+}
+
+export interface UserProfileWithStats extends UserProfile {
+  // bio, avatarUrl, displayName are inherited from User via UserProfile
+  followersCount: number;
+  followingCount: number;
+  reviewsCount: number;
+  ratingsCount: number;
+}
+
+export interface UserSearchResponse {
+  users: User[];
 }

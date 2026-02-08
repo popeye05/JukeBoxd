@@ -44,47 +44,42 @@ const Navigation: React.FC = () => {
   };
 
   return (
-    <AppBar position="static" sx={{ 
+    <AppBar position="static" sx={{
       background: 'linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%)',
       boxShadow: '0 2px 12px rgba(0, 0, 0, 0.4)'
     }}>
       <Toolbar sx={{ minHeight: '64px !important' }}>
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
             cursor: 'pointer',
             '&:hover': { opacity: 0.8 }
           }}
           onClick={() => navigate('/')}
         >
-          <Typography
-            variant="h5"
-            component="div"
-            sx={{ 
-              fontWeight: 700,
-              background: 'linear-gradient(135deg, #FFD700 0%, #FF6B35 100%)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              mr: 1
+          <img
+            src="/logo-landscape.png"
+            alt="JukeBoxd"
+            style={{
+              height: '40px',
+              width: 'auto',
+              marginRight: '10px'
             }}
-          >
-            🎵 JukeBoxd
-          </Typography>
+          />
         </Box>
 
         <Box sx={{ flexGrow: 1 }} />
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Button 
-            color="inherit" 
+          <Button
+            color="inherit"
             onClick={() => navigate('/')}
             startIcon={<Home />}
-            sx={{ 
+            sx={{
               borderRadius: 2,
               px: 2,
-              '&:hover': { 
+              '&:hover': {
                 backgroundColor: 'rgba(255, 215, 0, 0.1)',
                 color: '#FFD700'
               }
@@ -93,14 +88,14 @@ const Navigation: React.FC = () => {
             Home
           </Button>
 
-          <Button 
-            color="inherit" 
+          <Button
+            color="inherit"
             onClick={() => navigate('/search')}
             startIcon={<Search />}
-            sx={{ 
+            sx={{
               borderRadius: 2,
               px: 2,
-              '&:hover': { 
+              '&:hover': {
                 backgroundColor: 'rgba(255, 215, 0, 0.1)',
                 color: '#FFD700'
               }
@@ -109,16 +104,32 @@ const Navigation: React.FC = () => {
             Search
           </Button>
 
+          <Button
+            color="inherit"
+            onClick={() => navigate('/discover')}
+            startIcon={<Person />}
+            sx={{
+              borderRadius: 2,
+              px: 2,
+              '&:hover': {
+                backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                color: '#FFD700'
+              }
+            }}
+          >
+            Discover
+          </Button>
+
           {user ? (
             <>
-              <Button 
-                color="inherit" 
+              <Button
+                color="inherit"
                 onClick={() => navigate('/feed')}
                 startIcon={<RssFeed />}
-                sx={{ 
+                sx={{
                   borderRadius: 2,
                   px: 2,
-                  '&:hover': { 
+                  '&:hover': {
                     backgroundColor: 'rgba(255, 215, 0, 0.1)',
                     color: '#FFD700'
                   }
@@ -126,23 +137,23 @@ const Navigation: React.FC = () => {
               >
                 Feed
               </Button>
-              
+
               <IconButton
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleMenu}
-                sx={{ 
+                sx={{
                   ml: 1,
-                  '&:hover': { 
+                  '&:hover': {
                     backgroundColor: 'rgba(255, 215, 0, 0.1)'
                   }
                 }}
               >
-                <Avatar sx={{ 
-                  width: 36, 
-                  height: 36, 
+                <Avatar sx={{
+                  width: 36,
+                  height: 36,
                   bgcolor: '#FFD700',
                   color: '#0A0A0A',
                   fontWeight: 700,
@@ -151,7 +162,7 @@ const Navigation: React.FC = () => {
                   {user.username.charAt(0).toUpperCase()}
                 </Avatar>
               </IconButton>
-              
+
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
@@ -176,10 +187,10 @@ const Navigation: React.FC = () => {
                   }
                 }}
               >
-                <MenuItem 
+                <MenuItem
                   onClick={handleProfile}
-                  sx={{ 
-                    '&:hover': { 
+                  sx={{
+                    '&:hover': {
                       backgroundColor: 'rgba(255, 215, 0, 0.1)',
                       color: '#FFD700'
                     }
@@ -188,10 +199,10 @@ const Navigation: React.FC = () => {
                   <Person sx={{ mr: 1, fontSize: '1.2rem' }} />
                   Profile
                 </MenuItem>
-                <MenuItem 
+                <MenuItem
                   onClick={handleFeed}
-                  sx={{ 
-                    '&:hover': { 
+                  sx={{
+                    '&:hover': {
                       backgroundColor: 'rgba(255, 215, 0, 0.1)',
                       color: '#FFD700'
                     }
@@ -200,11 +211,11 @@ const Navigation: React.FC = () => {
                   <RssFeed sx={{ mr: 1, fontSize: '1.2rem' }} />
                   Feed
                 </MenuItem>
-                <MenuItem 
+                <MenuItem
                   onClick={handleLogout}
-                  sx={{ 
+                  sx={{
                     color: '#FF6B6B',
-                    '&:hover': { 
+                    '&:hover': {
                       backgroundColor: 'rgba(255, 107, 107, 0.1)',
                       color: '#FF6B6B'
                     }
@@ -215,10 +226,10 @@ const Navigation: React.FC = () => {
               </Menu>
             </>
           ) : (
-            <Button 
+            <Button
               variant="contained"
               onClick={() => navigate('/auth')}
-              sx={{ 
+              sx={{
                 borderRadius: 2,
                 px: 3,
                 background: 'linear-gradient(135deg, #FFD700 0%, #FF6B35 100%)',

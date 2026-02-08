@@ -44,8 +44,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
       return 'Please enter a valid email address';
     }
 
-    if (password.length < 6) {
-      return 'Password must be at least 6 characters long';
+    if (password.length < 8) {
+      return 'Password must be at least 8 characters long';
+    }
+
+    // Password must contain uppercase, lowercase and number
+    const passwordRegex = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
+    if (!passwordRegex.test(password)) {
+      return 'Password must contain at least one uppercase letter, one lowercase letter, and one number';
     }
 
     if (password !== confirmPassword) {
@@ -83,7 +89,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
         <Typography variant="h4" component="h1" gutterBottom align="center">
           Sign Up
         </Typography>
-        
+
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
@@ -115,7 +121,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
             autoComplete="email"
             disabled={loading}
           />
-          
+
           <TextField
             fullWidth
             label="Password"
@@ -126,7 +132,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
             required
             autoComplete="new-password"
             disabled={loading}
-            helperText="At least 6 characters"
+            helperText="8+ characters with uppercase, lowercase, and number"
           />
 
           <TextField

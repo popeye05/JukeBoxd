@@ -41,9 +41,9 @@ export class ReviewService {
 
       return reviewResult;
     },
-    // Validation query to ensure the review was persisted
-    'SELECT id FROM reviews WHERE user_id = $1 AND album_id = $2',
-    [userId, albumId]);
+      // Validation query to ensure the review was persisted
+      'SELECT id FROM reviews WHERE user_id = $1 AND album_id = $2',
+      [userId, albumId]);
   }
 
   /**
@@ -77,9 +77,9 @@ export class ReviewService {
 
       return reviewResult;
     },
-    // Validation query to ensure the review was persisted
-    'SELECT id FROM reviews WHERE user_id = $1 AND album_id = $2',
-    [userId, albumId]);
+      // Validation query to ensure the review was persisted
+      'SELECT id FROM reviews WHERE user_id = $1 AND album_id = $2',
+      [userId, albumId]);
   }
 
   /**
@@ -132,6 +132,13 @@ export class ReviewService {
   }
 
   /**
+   * Get recent reviews for home page
+   */
+  static async getRecentReviews(limit: number = 6): Promise<ReviewWithDetails[]> {
+    return await ReviewModel.findRecentWithDetails(limit);
+  }
+
+  /**
    * Get review count for an album
    */
   static async getAlbumReviewCount(albumId: string): Promise<number> {
@@ -166,7 +173,7 @@ export class ReviewService {
     if (content === null || content === undefined || typeof content !== 'string') {
       return { isValid: false, error: 'Review content is required' };
     }
-    
+
     // Check if content is only whitespace
     if (content.trim().length === 0) {
       return { isValid: false, error: 'Review content cannot be empty or contain only whitespace' };
