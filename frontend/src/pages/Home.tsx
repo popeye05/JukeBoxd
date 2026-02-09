@@ -29,7 +29,6 @@ const TRENDING_ALBUMS = [
 const Home = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
-    const theme = useTheme();
     const [popularReviews, setPopularReviews] = useState<any[]>([]);
 
     useEffect(() => {

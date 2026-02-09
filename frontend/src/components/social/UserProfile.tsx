@@ -38,7 +38,6 @@ const UserProfile: React.FC<UserProfileProps> = ({
   const [profile, setProfile] = useState<UserProfileWithStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [tabValue, setTabValue] = useState(0);
   const [reviews, setReviews] = useState<ReviewWithDetails[]>([]);
   const [ratings, setRatings] = useState<RatingWithDetails[]>([]);
 
@@ -76,10 +75,6 @@ const UserProfile: React.FC<UserProfileProps> = ({
 
     fetchData();
   }, [userId]);
-
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
 
   const handleFollowChange = (isFollowing: boolean) => {
     if (profile) {
