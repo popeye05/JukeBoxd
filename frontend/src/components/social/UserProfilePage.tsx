@@ -31,18 +31,6 @@ const UserProfilePage: React.FC = () => {
     setError(null);
   }, [profileUserId]);
 
-  const fetchUserRatings = async () => {
-    // Removed - functionality moved to UserProfile component
-  };
-
-  const fetchUserReviews = async () => {
-    // Removed - functionality moved to UserProfile component
-  };
-
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    // Removed - tabs functionality removed
-  };
-
   if (!profileUserId) {
     return (
       <Container maxWidth="lg">
