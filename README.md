@@ -71,7 +71,7 @@
 ## 🚀 Quick Start
 
 ### **Option 1: Try the Live Demo**
-Visit [https://jukeboxd-app.onrender.com](https://jukeboxd-app.onrender.com) - No setup required!
+Railway Trial ended
 
 ### **Option 2: Run Locally**
 
@@ -79,6 +79,7 @@ Visit [https://jukeboxd-app.onrender.com](https://jukeboxd-app.onrender.com) - N
 - **Node.js** (v18+)
 - **Docker** & **Docker Compose**
 - **Git**
+- Redis Configs are given, if any problem comes , just check for some quick fixes(Use Kiro/ Cursor)
 
 #### Installation
 ```bash
