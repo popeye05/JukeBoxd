@@ -1,5 +1,5 @@
 import api from './api';
-import { User, UserProfile, UserProfileWithStats, Follow, ApiResponse, UserSearchResponse } from '../types';
+import { User, UserProfileWithStats, Follow, ApiResponse, UserSearchResponse } from '../types';
 
 export interface SocialStats {
   followersCount: number;

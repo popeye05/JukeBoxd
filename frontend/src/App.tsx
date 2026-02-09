@@ -1,9 +1,9 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Container, Box, Typography, Card, CardContent, CardActionArea } from '@mui/material';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { Container } from '@mui/material';
+import { AuthProvider } from './contexts/AuthContext';
 import { Navigation } from './components/layout';
 import { AuthPage, ProtectedRoute } from './components/auth';
 import { AlbumSearchPage } from './components/albums';

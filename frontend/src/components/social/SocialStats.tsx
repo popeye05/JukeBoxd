@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
@@ -13,10 +13,9 @@ import {
   ListItemText,
   Avatar,
   CircularProgress,
-  Alert,
-  Chip
+  Alert
 } from '@mui/material';
-import { People, PersonAdd } from '@mui/icons-material';
+import { People } from '@mui/icons-material';
 import { User } from '../../types';
 import { socialApi } from '../../services/socialApi';
 import FollowButton from './FollowButton';

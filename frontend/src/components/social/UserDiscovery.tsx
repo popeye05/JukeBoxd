@@ -52,6 +52,7 @@ const UserDiscovery: React.FC<UserDiscoveryProps> = ({
 
   useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [limit]);
 
   const handleRefresh = () => {

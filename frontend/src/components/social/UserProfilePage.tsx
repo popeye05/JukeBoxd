@@ -3,19 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
   Container,
   Box,
-  Typography,
   Grid,
-  Card,
-  CardContent,
-  Tabs,
-  Tab,
   Alert,
-  CircularProgress,
   Button
 } from '@mui/material';
-import { ArrowBack, Star, RateReview } from '@mui/icons-material';
+import { ArrowBack } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
-import { UserProfile, UserDiscovery } from './index';
+import { UserProfile } from './index';
 import { RatingWithDetails, ReviewWithDetails } from '../../types';
 import api from '../../services/api';
 

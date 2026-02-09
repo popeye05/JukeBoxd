@@ -9,13 +9,12 @@ import {
     CardContent,
     Button,
     Divider,
-    useTheme,
     Avatar,
     Paper
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Star, TrendingUp, RateReview, Whatshot } from '@mui/icons-material';
+import { Star } from '@mui/icons-material';
 
 // Mock data for initial design - in a real app this would come from an API
 

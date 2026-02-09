@@ -5,17 +5,14 @@ import {
   Typography,
   Box,
   Avatar,
-  Chip,
   Grid,
   Divider,
   CircularProgress,
   Alert,
-  Tabs,
-  Tab,
   CardMedia,
   Button
 } from '@mui/material';
-import { Person, CalendarToday, Star, RateReview } from '@mui/icons-material';
+import { CalendarToday, Star, RateReview } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
 import { socialApi } from '../../services/socialApi';
 import { reviewService } from '../../services/reviewService';
