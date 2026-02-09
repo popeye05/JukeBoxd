@@ -4,7 +4,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import fc from 'fast-check';
 import UserProfile from './UserProfile';
 import { useAuth } from '../../contexts/AuthContext';
-import { socialApi, UserProfileWithStats } from '../../services/socialApi';
+import { socialApi } from '../../services/socialApi';
+import { UserProfileWithStats } from '../../types';
 
 // Feature: jukeboxd, Property 10: Profile Information Display
 
