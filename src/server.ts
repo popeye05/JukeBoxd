@@ -107,6 +107,84 @@ async function startServer() {
     await connectDatabase();
     console.log('✅ Database connected successfully');
 
+    // Run migrations automatically in production
+    if (process.env.NODE_ENV === 'production') {
+      try {
+        console.log('🔄 Running database migrations...');
+        const { query } = await import('@/config/database');
+        
+        // Enable UUID extension
+        await query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`);
+        
+        // Create tables
+        await query(`CREATE TABLE IF NOT EXISTS users (
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+          username VARCHAR(50) UNIQUE NOT NULL,
+          email VARCHAR(255) UNIQUE NOT NULL,
+          password_hash VARCHAR(255) NOT NULL,
+          bio TEXT,
+          avatar_url TEXT,
+          display_name VARCHAR(100),
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );`);
+        
+        await query(`CREATE TABLE IF NOT EXISTS albums (
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+          spotify_id VARCHAR(255) UNIQUE NOT NULL,
+          name VARCHAR(255) NOT NULL,
+          artist VARCHAR(255) NOT NULL,
+          release_date DATE,
+          image_url TEXT,
+          spotify_url TEXT,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );`);
+        
+        await query(`CREATE TABLE IF NOT EXISTS ratings (
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+          user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+          album_id UUID REFERENCES albums(id) ON DELETE CASCADE,
+          rating INTEGER CHECK (rating >= 1 AND rating <= 5),
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          UNIQUE(user_id, album_id)
+        );`);
+        
+        await query(`CREATE TABLE IF NOT EXISTS reviews (
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+          user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+          album_id UUID REFERENCES albums(id) ON DELETE CASCADE,
+          content TEXT NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          UNIQUE(user_id, album_id)
+        );`);
+        
+        await query(`CREATE TABLE IF NOT EXISTS follows (
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+          follower_id UUID REFERENCES users(id) ON DELETE CASCADE,
+          followee_id UUID REFERENCES users(id) ON DELETE CASCADE,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          UNIQUE(follower_id, followee_id),
+          CHECK(follower_id != followee_id)
+        );`);
+        
+        await query(`CREATE TABLE IF NOT EXISTS activities (
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+          user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+          type VARCHAR(20) NOT NULL,
+          album_id UUID REFERENCES albums(id) ON DELETE CASCADE,
+          data JSONB,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );`);
+        
+        console.log('✅ Database migrations completed');
+      } catch (migrationError) {
+        console.warn('⚠️ Migration warning (tables may already exist):', migrationError);
+      }
+    }
+
     // Connect to Redis (optional - will fallback to memory store)
     try {
       await connectRedis();
