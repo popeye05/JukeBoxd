@@ -34,8 +34,12 @@ const Home = () => {
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                // Determine API URL based on environment (handling port difference)
-                const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+                // Use the configured API base URL
+                const apiUrl = process.env.REACT_APP_API_URL || (
+                    process.env.NODE_ENV === 'production'
+                        ? '/api'
+                        : 'http://localhost:3001/api'
+                );
                 const response = await fetch(`${apiUrl}/reviews/recent?limit=6`);
                 const data = await response.json();
 

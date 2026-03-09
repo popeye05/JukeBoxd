@@ -191,7 +191,11 @@ export const AlbumSearch: React.FC<AlbumSearchProps> = ({ onAlbumSelect }) => {
                     height="200"
                     image={album.imageUrl || '/placeholder-album.svg'}
                     alt={`${album.name} by ${album.artist}`}
-                    sx={{ objectFit: 'cover' }}
+                    sx={{ objectFit: 'cover', bgcolor: 'grey.800' }}
+                    onError={(e: any) => {
+                      e.target.onerror = null;
+                      e.target.src = '/placeholder-album.svg';
+                    }}
                   />
                   
                   <CardContent sx={{ flexGrow: 1, pb: 1 }}>
