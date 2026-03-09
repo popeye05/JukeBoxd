@@ -55,11 +55,22 @@ router.get('/search', [
 
     res.status(200).json(response);
   } catch (error: any) {
-    // Handle specific Last.fm API errors
-    if (error.message.includes('Last.fm')) {
-      throw createError(error.message, 503);
-    }
-    throw error;
+    // Always fall back to demo mode on any error
+    console.warn('Last.fm API error, using demo mode:', error.message);
+    const albums = await musicService.searchAlbums(query as string, limit as number);
+    
+    const response: ApiResponse = {
+      success: true,
+      data: {
+        albums,
+        query: query as string,
+        limit: limit as number,
+        total: albums.length
+      },
+      timestamp: new Date().toISOString()
+    };
+
+    res.status(200).json(response);
   }
 }));
 
