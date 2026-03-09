@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run build:backend && npm run build:frontend",
     "build:backend": "tsc -p tsconfig.prod.json",
-    "build:frontend": "cd frontend && npm run build",
+    "build:frontend": "cd frontend && GENERATE_SOURCEMAP=false INLINE_RUNTIME_CHUNK=false npm run build",
     "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/server.ts",
     "test": "jest",
@@ -31,9 +31,6 @@
   "author": "JukeBoxd Team",
   "license": "MIT",
   "dependencies": {
-    "@tidal-music/api": "^0.7.0",
-    "@tidal-music/auth": "^1.4.0",
-    "@tidal-music/search": "^0.4.0",
     "axios": "^1.6.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
@@ -46,7 +43,6 @@
     "morgan": "^1.10.0",
     "pg": "^8.11.3",
     "redis": "^4.6.10",
-    "tidal-music-api": "^1.2.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
