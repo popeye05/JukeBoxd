@@ -4,7 +4,7 @@
 
 *Inspired by Letterboxd, but for music enthusiasts who want to share their musical journey*
 
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit_JukeBoxd-FFD700?style=for-the-badge)](https://jukeboxd.up.railway.app)
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit_JukeBoxd-FFD700?style=for-the-badge)](https://jukeboxd-8781.onrender.com/)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/popeye05/jukeboxd)
 
 ---
