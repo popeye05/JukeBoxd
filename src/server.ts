@@ -17,6 +17,7 @@ import ratingRoutes from '@/routes/ratings';
 import reviewRoutes from '@/routes/reviews';
 import socialRoutes from '@/routes/social';
 import feedRoutes from '@/routes/feed';
+import favoritesRoutes from '@/routes/favorites';
 
 // Load environment variables
 dotenv.config();
@@ -85,6 +86,7 @@ app.use('/api/ratings', ratingRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/social', socialRoutes);
 app.use('/api/feed', feedRoutes);
+app.use('/api/favorites', favoritesRoutes);
 
 // Serve static files from React build in production
 if (process.env.NODE_ENV === 'production') {
@@ -177,6 +179,16 @@ async function startServer() {
           album_id UUID REFERENCES albums(id) ON DELETE CASCADE,
           data JSONB,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );`);
+        
+        await query(`CREATE TABLE IF NOT EXISTS favorite_albums (
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+          user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+          album_id UUID REFERENCES albums(id) ON DELETE CASCADE,
+          rank INTEGER NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          UNIQUE(user_id, album_id)
         );`);
         
         console.log('✅ Database migrations completed');

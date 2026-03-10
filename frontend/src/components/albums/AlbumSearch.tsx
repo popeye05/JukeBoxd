@@ -167,7 +167,7 @@ export const AlbumSearch: React.FC<AlbumSearchProps> = ({ onAlbumSelect }) => {
                 md: 'repeat(3, 1fr)',
                 lg: 'repeat(4, 1fr)',
               },
-              gap: 2,
+              gap: { xs: 1.5, md: 2 },
             }}
           >
             {searchResults.map((album) => (

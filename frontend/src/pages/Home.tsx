@@ -60,7 +60,7 @@ const Home = () => {
             <Box
                 sx={{
                     position: 'relative',
-                    height: '400px',
+                    height: { xs: '300px', md: '400px' },
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -81,7 +81,8 @@ const Home = () => {
                         sx={{
                             fontWeight: 900,
                             textShadow: '0 4px 20px rgba(0,0,0,0.5)',
-                            mb: 2
+                            mb: 2,
+                            fontSize: { xs: '1.5rem', sm: '2.5rem', md: '3.5rem' }
                         }}
                     >
                         Track albums you've listened to.
@@ -97,9 +98,9 @@ const Home = () => {
                         onClick={() => user ? navigate('/search') : navigate('/auth')}
                         sx={{
                             mt: 2,
-                            px: 4,
-                            py: 1.5,
-                            fontSize: '1.2rem',
+                            px: { xs: 3, md: 4 },
+                            py: { xs: 1, md: 1.5 },
+                            fontSize: { xs: '1rem', md: '1.2rem' },
                             borderRadius: '50px'
                         }}
                     >

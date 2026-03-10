@@ -21,6 +21,7 @@ import { UserProfileWithStats, ReviewWithDetails, RatingWithDetails } from '../.
 import FollowButton from './FollowButton';
 import SocialStats from './SocialStats';
 import EditProfileDialog from './EditProfileDialog';
+import FavoriteAlbums from './FavoriteAlbums';
 import { Edit } from '@mui/icons-material';
 
 interface UserProfileProps {
@@ -277,6 +278,9 @@ const UserProfile: React.FC<UserProfileProps> = ({
           </Box>
         </CardContent>
       </Card>
+
+      {/* Favorite Albums Section */}
+      <FavoriteAlbums userId={userId} isOwnProfile={isOwnProfile} />
 
       {/* Lower Section - Recent Activity */}
       <Grid container spacing={3}>

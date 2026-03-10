@@ -8,15 +8,23 @@ import {
   MenuItem,
   Avatar,
   Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Search, Home, RssFeed, Person } from '@mui/icons-material';
+import { Search, Home, RssFeed, Person, Menu as MenuIcon } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Navigation: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -42,6 +50,9 @@ const Navigation: React.FC = () => {
     handleClose();
   };
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
     <AppBar position="static" sx={{
       background: 'linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%)',
@@ -61,7 +72,7 @@ const Navigation: React.FC = () => {
             src="/logo-landscape.png"
             alt="JukeBoxd"
             style={{
-              height: '40px',
+              height: isMobile ? '30px' : '40px',
               width: 'auto',
               marginRight: '10px'
             }}
@@ -70,7 +81,66 @@ const Navigation: React.FC = () => {
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        {isMobile ? (
+          // Mobile Menu
+          <>
+            <IconButton
+              color="inherit"
+              onClick={() => setMobileMenuOpen(true)}
+              sx={{ ml: 1 }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Drawer
+              anchor="right"
+              open={mobileMenuOpen}
+              onClose={() => setMobileMenuOpen(false)}
+              PaperProps={{
+                sx: {
+                  backgroundColor: '#1A1A1A',
+                  width: 250
+                }
+              }}
+            >
+              <List>
+                <ListItem button onClick={() => { navigate('/'); setMobileMenuOpen(false); }}>
+                  <ListItemIcon><Home sx={{ color: '#FFD700' }} /></ListItemIcon>
+                  <ListItemText primary="Home" />
+                </ListItem>
+                <ListItem button onClick={() => { navigate('/search'); setMobileMenuOpen(false); }}>
+                  <ListItemIcon><Search sx={{ color: '#FFD700' }} /></ListItemIcon>
+                  <ListItemText primary="Search" />
+                </ListItem>
+                <ListItem button onClick={() => { navigate('/discover'); setMobileMenuOpen(false); }}>
+                  <ListItemIcon><Person sx={{ color: '#FFD700' }} /></ListItemIcon>
+                  <ListItemText primary="Discover" />
+                </ListItem>
+                {user && (
+                  <>
+                    <ListItem button onClick={() => { navigate('/feed'); setMobileMenuOpen(false); }}>
+                      <ListItemIcon><RssFeed sx={{ color: '#FFD700' }} /></ListItemIcon>
+                      <ListItemText primary="Feed" />
+                    </ListItem>
+                    <ListItem button onClick={() => { navigate('/profile'); setMobileMenuOpen(false); }}>
+                      <ListItemIcon><Person sx={{ color: '#FFD700' }} /></ListItemIcon>
+                      <ListItemText primary="Profile" />
+                    </ListItem>
+                    <ListItem button onClick={() => { logout(); setMobileMenuOpen(false); navigate('/'); }}>
+                      <ListItemText primary="Logout" sx={{ color: '#FF6B6B' }} />
+                    </ListItem>
+                  </>
+                )}
+                {!user && (
+                  <ListItem button onClick={() => { navigate('/auth'); setMobileMenuOpen(false); }}>
+                    <ListItemText primary="Sign In" sx={{ color: '#FFD700' }} />
+                  </ListItem>
+                )}
+              </List>
+            </Drawer>
+          </>
+        ) : (
+          // Desktop Menu
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Button
             color="inherit"
             onClick={() => navigate('/')}
@@ -245,6 +315,7 @@ const Navigation: React.FC = () => {
             </Button>
           )}
         </Box>
+        )}
       </Toolbar>
     </AppBar>
   );

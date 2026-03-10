@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
     <Box
       component="footer"
       sx={{
-        py: 3,
+        py: { xs: 2, md: 3 },
         px: 2,
         mt: 'auto',
         backgroundColor: '#0A0A0A',
@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
       }}
     >
       <Container maxWidth="lg">
-        <Typography variant="body2" color="text.secondary" align="center">
+        <Typography variant="body2" color="text.secondary" align="center" sx={{ fontSize: { xs: '0.75rem', md: '0.875rem' } }}>
           Created by{' '}
           <Link
             href="https://github.com/popeye05"
