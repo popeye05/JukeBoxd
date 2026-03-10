@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Container } from '@mui/material';
 import { AuthProvider } from './contexts/AuthContext';
-import { Navigation } from './components/layout';
+import { Navigation, Footer } from './components/layout';
 import { AuthPage, ProtectedRoute } from './components/auth';
 import { AlbumSearchPage } from './components/albums';
 import { UserProfilePage } from './components/social';
@@ -67,6 +67,8 @@ function App() {
                 />
               </Routes>
             </Container>
+            
+            <Footer />
           </Router>
         </AuthProvider>
       </ThemeProvider>

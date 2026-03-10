@@ -124,25 +124,37 @@ const UserProfile: React.FC<UserProfileProps> = ({
     return (
       <Card variant="outlined">
         <CardContent>
-          <Box display="flex" alignItems="center" gap={2}>
-            <Avatar sx={{ bgcolor: 'primary.main', src: profile.avatarUrl }}>
-              {profile.displayName?.charAt(0).toUpperCase() || profile.username.charAt(0).toUpperCase()}
-            </Avatar>
-            <Box flex={1}>
-              <Typography variant="h6">{profile.displayName || profile.username}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                {profile.followersCount} followers • {profile.followingCount} following
-              </Typography>
+          <Box display="flex" flexDirection="column" gap={2}>
+            <Box display="flex" alignItems="center" gap={2}>
+              <Avatar sx={{ bgcolor: 'primary.main', src: profile.avatarUrl }}>
+                {profile.displayName?.charAt(0).toUpperCase() || profile.username.charAt(0).toUpperCase()}
+              </Avatar>
+              <Box flex={1}>
+                <Typography variant="h6">{profile.displayName || profile.username}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {profile.followersCount} followers • {profile.followingCount} following
+                </Typography>
+              </Box>
             </Box>
-            {showFollowButton && !isOwnProfile && (
-              <FollowButton
-                userId={userId}
-                username={profile.username}
-                onFollowChange={handleFollowChange}
+            <Box display="flex" gap={1}>
+              <Button
+                variant="contained"
                 size="small"
-                variant="outlined"
-              />
-            )}
+                fullWidth
+                onClick={() => window.location.href = `/profile/${userId}`}
+              >
+                View Profile
+              </Button>
+              {showFollowButton && !isOwnProfile && (
+                <FollowButton
+                  userId={userId}
+                  username={profile.username}
+                  onFollowChange={handleFollowChange}
+                  size="small"
+                  variant="outlined"
+                />
+              )}
+            </Box>
           </Box>
         </CardContent>
       </Card>
