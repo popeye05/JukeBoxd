@@ -13,7 +13,6 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
-import Grid from '@mui/material/Grid2';
 import { Delete, Edit, Add } from '@mui/icons-material';
 import { favoritesService, FavoriteAlbum } from '../../services/favoritesService';
 import { albumService } from '../../services/albumService';
@@ -183,9 +182,17 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
             </Typography>
           </Box>
         ) : (
-          <Grid container spacing={2}>
+          <Box sx={{ 
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: 'repeat(2, 1fr)',
+              sm: 'repeat(3, 1fr)',
+              md: 'repeat(4, 1fr)',
+            },
+            gap: 2
+          }}>
             {favorites.map((favorite, index) => (
-              <Grid size={{ xs: 6, sm: 4, md: 3 }} key={favorite.id}>
+              <Box key={favorite.id}>
                 <Card variant="outlined" sx={{ position: 'relative' }}>
                   <Box sx={{ position: 'relative', paddingTop: '100%' }}>
                     <CardMedia
@@ -267,9 +274,9 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
                     </Typography>
                   </CardContent>
                 </Card>
-              </Grid>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         )}
 
         {/* Add Album Dialog */}
@@ -298,9 +305,16 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
             </Box>
 
             {searchResults.length > 0 && (
-              <Grid container spacing={2}>
+              <Box sx={{ 
+                display: 'grid',
+                gridTemplateColumns: {
+                  xs: 'repeat(2, 1fr)',
+                  sm: 'repeat(3, 1fr)',
+                },
+                gap: 2
+              }}>
                 {searchResults.map((album) => (
-                  <Grid size={{ xs: 6, sm: 4 }} key={album.spotifyId}>
+                  <Box key={album.spotifyId}>
                     <Card
                       sx={{ cursor: 'pointer', '&:hover': { transform: 'scale(1.02)' } }}
                       onClick={() => handleAddFavorite(album)}
@@ -320,9 +334,9 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
                         </Typography>
                       </CardContent>
                     </Card>
-                  </Grid>
+                  </Box>
                 ))}
-              </Grid>
+              </Box>
             )}
           </DialogContent>
         </Dialog>
