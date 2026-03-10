@@ -66,7 +66,12 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
 
   const handleAddFavorite = async (album: Album) => {
     try {
-      await favoritesService.addFavorite(album.id);
+      // First, ensure the album exists in our database by fetching it
+      // This will create it if it doesn't exist
+      const albumDetails = await albumService.getAlbum(album.spotifyId);
+      
+      // Now add to favorites using the database ID
+      await favoritesService.addFavorite(albumDetails.id);
       await fetchFavorites();
       setAddDialogOpen(false);
       setSearchQuery('');
