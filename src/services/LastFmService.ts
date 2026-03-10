@@ -392,6 +392,57 @@ export class LastFmService {
   }
 
   /**
+   * Get top/trending albums from Last.fm charts
+   */
+  public async getTopAlbums(limit: number = 12): Promise<Album[]> {
+    // Demo mode - return shuffled mock albums
+    if (this.demoMode) {
+      console.log(`🎵 Demo mode: Getting top ${limit} albums`);
+      const shuffled = [...MOCK_ALBUMS].sort(() => Math.random() - 0.5);
+      await this.delay(500);
+      return shuffled.slice(0, limit);
+    }
+
+    // Check cache first
+    const cacheKey = `${this.cachePrefix}top:${limit}`;
+    const cached = await cacheGet(cacheKey);
+    if (cached) {
+      try {
+        return JSON.parse(cached);
+      } catch (error) {
+        console.error('Error parsing cached top albums:', error);
+      }
+    }
+
+    await this.checkRateLimit();
+
+    try {
+      const response: AxiosResponse<{ albums: { album: LastFmAlbum[] } }> = await this.client.get('', {
+        params: {
+          method: 'chart.getTopAlbums',
+          api_key: this.apiKey,
+          format: 'json',
+          limit: Math.min(limit, 50),
+        },
+      });
+
+      const albums = response.data.albums?.album?.map(this.mapLastFmAlbumToAlbum) || [];
+      
+      // Cache the results
+      await cacheSet(cacheKey, JSON.stringify(albums), this.searchCacheTTL);
+      
+      return albums;
+    } catch (error) {
+      console.error('Error getting top albums:', error);
+      
+      // Fallback to mock data on error
+      console.log('🎵 Falling back to demo mode due to API error');
+      const shuffled = [...MOCK_ALBUMS].sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, limit);
+    }
+  }
+
+  /**
    * Map Last.fm album to our Album interface
    */
   private mapLastFmAlbumToAlbum = (lastFmAlbum: LastFmAlbum): Album => {

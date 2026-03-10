@@ -10,6 +10,50 @@ import { ApiResponse } from '@/types';
 const router = Router();
 
 /**
+ * GET /api/albums/trending
+ * Get trending/top albums from Last.fm charts
+ */
+router.get('/trending', [
+  query('limit')
+    .optional()
+    .isInt({ min: 1, max: 50 })
+    .withMessage('Limit must be between 1 and 50')
+    .toInt()
+], asyncHandler(async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw createError('Validation failed', 400);
+  }
+
+  const { limit = 12 } = req.query;
+
+  try {
+    const albums = await musicService.getTopAlbums(limit as number);
+
+    const response: ApiResponse = {
+      success: true,
+      data: {
+        albums,
+        limit: limit as number,
+        total: albums.length
+      },
+      timestamp: new Date().toISOString()
+    };
+
+    res.status(200).json(response);
+  } catch (error: any) {
+    console.warn('Error fetching trending albums:', error.message);
+    // Return empty array on error
+    const response: ApiResponse = {
+      success: true,
+      data: { albums: [], limit: limit as number, total: 0 },
+      timestamp: new Date().toISOString()
+    };
+    res.status(200).json(response);
+  }
+}));
+
+/**
  * GET /api/albums/search
  * Search albums via Last.fm
  */

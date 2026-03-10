@@ -19,17 +19,11 @@ import { Star } from '@mui/icons-material';
 // Mock data for initial design - in a real app this would come from an API
 
 
-const TRENDING_ALBUMS = [
-    { id: 1, title: "Midnights", artist: "Taylor Swift", cover: "https://upload.wikimedia.org/wikipedia/en/9/9f/Midnights_-_Taylor_Swift.png" },
-    { id: 2, title: "SOS", artist: "SZA", cover: "https://upload.wikimedia.org/wikipedia/en/2/2c/SZA_-_S.O.S.png" },
-    { id: 3, title: "Renaissance", artist: "Beyoncé", cover: "https://upload.wikimedia.org/wikipedia/en/2/2e/Renaissance_by_Beyonc%C3%A9.png" },
-    { id: 4, title: "Un Verano Sin Ti", artist: "Bad Bunny", cover: "https://upload.wikimedia.org/wikipedia/en/6/60/Bad_Bunny_-_Un_Verano_Sin_Ti.png" },
-];
-
 const Home = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
     const [popularReviews, setPopularReviews] = useState<any[]>([]);
+    const [trendingAlbums, setTrendingAlbums] = useState<any[]>([]);
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -51,7 +45,26 @@ const Home = () => {
             }
         };
 
+        const fetchTrending = async () => {
+            try {
+                const apiUrl = process.env.REACT_APP_API_URL || (
+                    process.env.NODE_ENV === 'production'
+                        ? '/api'
+                        : 'http://localhost:3001/api'
+                );
+                const response = await fetch(`${apiUrl}/albums/trending?limit=4`);
+                const data = await response.json();
+
+                if (data.success && data.data.albums) {
+                    setTrendingAlbums(data.data.albums);
+                }
+            } catch (error) {
+                console.error('Failed to fetch trending albums:', error);
+            }
+        };
+
         fetchReviews();
+        fetchTrending();
     }, []);
 
     return (
@@ -180,54 +193,60 @@ const Home = () => {
                 <Typography variant="h5" component="h2" fontWeight="bold" sx={{ mb: 3 }}>
                     Trending on JukeBoxd
                 </Typography>
-                <Grid container spacing={2}>
-                    {TRENDING_ALBUMS.map((album) => (
-                        <Grid key={album.id} size={{ xs: 6, sm: 3 }}>
-                            <Paper
-                                elevation={0}
-                                sx={{
-                                    position: 'relative',
-                                    overflow: 'hidden',
-                                    borderRadius: 2,
-                                    transition: 'transform 0.2s',
-                                    '&:hover': { transform: 'scale(1.02)' },
-                                    cursor: 'pointer'
-                                }}
-                                onClick={() => navigate('/search')}
-                            >
-                                <Box
-                                    component="img"
-                                    src={album.cover}
-                                    alt={album.title}
+                {trendingAlbums.length === 0 ? (
+                    <Typography variant="body1" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                        Loading trending albums...
+                    </Typography>
+                ) : (
+                    <Grid container spacing={2}>
+                        {trendingAlbums.map((album) => (
+                            <Grid key={album.spotifyId} size={{ xs: 6, sm: 3 }}>
+                                <Paper
+                                    elevation={0}
                                     sx={{
-                                        width: '100%',
-                                        height: 'auto',
-                                        display: 'block',
-                                        aspectRatio: '1/1'
+                                        position: 'relative',
+                                        overflow: 'hidden',
+                                        borderRadius: 2,
+                                        transition: 'transform 0.2s',
+                                        '&:hover': { transform: 'scale(1.02)' },
+                                        cursor: 'pointer'
                                     }}
-                                />
-                                <Box
-                                    sx={{
-                                        position: 'absolute',
-                                        bottom: 0,
-                                        left: 0,
-                                        right: 0,
-                                        background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)',
-                                        p: 2,
-                                        pt: 6
-                                    }}
+                                    onClick={() => navigate('/search')}
                                 >
-                                    <Typography variant="subtitle1" fontWeight="bold" noWrap>
-                                        {album.title}
-                                    </Typography>
-                                    <Typography variant="caption" color="text.secondary" noWrap>
-                                        {album.artist}
-                                    </Typography>
-                                </Box>
-                            </Paper>
-                        </Grid>
-                    ))}
-                </Grid>
+                                    <Box
+                                        component="img"
+                                        src={album.imageUrl || 'https://via.placeholder.com/300'}
+                                        alt={album.name}
+                                        sx={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            display: 'block',
+                                            aspectRatio: '1/1'
+                                        }}
+                                    />
+                                    <Box
+                                        sx={{
+                                            position: 'absolute',
+                                            bottom: 0,
+                                            left: 0,
+                                            right: 0,
+                                            background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)',
+                                            p: 2,
+                                            pt: 6
+                                        }}
+                                    >
+                                        <Typography variant="subtitle1" fontWeight="bold" noWrap>
+                                            {album.name}
+                                        </Typography>
+                                        <Typography variant="caption" color="text.secondary" noWrap>
+                                            {album.artist}
+                                        </Typography>
+                                    </Box>
+                                </Paper>
+                            </Grid>
+                        ))}
+                    </Grid>
+                )}
             </Box>
         </Box>
     );
