@@ -103,35 +103,35 @@ const Navigation: React.FC = () => {
               }}
             >
               <List>
-                <ListItem button onClick={() => { navigate('/'); setMobileMenuOpen(false); }}>
+                <ListItem onClick={() => { navigate('/'); setMobileMenuOpen(false); }} sx={{ cursor: 'pointer' }}>
                   <ListItemIcon><Home sx={{ color: '#FFD700' }} /></ListItemIcon>
                   <ListItemText primary="Home" />
                 </ListItem>
-                <ListItem button onClick={() => { navigate('/search'); setMobileMenuOpen(false); }}>
+                <ListItem onClick={() => { navigate('/search'); setMobileMenuOpen(false); }} sx={{ cursor: 'pointer' }}>
                   <ListItemIcon><Search sx={{ color: '#FFD700' }} /></ListItemIcon>
                   <ListItemText primary="Search" />
                 </ListItem>
-                <ListItem button onClick={() => { navigate('/discover'); setMobileMenuOpen(false); }}>
+                <ListItem onClick={() => { navigate('/discover'); setMobileMenuOpen(false); }} sx={{ cursor: 'pointer' }}>
                   <ListItemIcon><Person sx={{ color: '#FFD700' }} /></ListItemIcon>
                   <ListItemText primary="Discover" />
                 </ListItem>
                 {user && (
                   <>
-                    <ListItem button onClick={() => { navigate('/feed'); setMobileMenuOpen(false); }}>
+                    <ListItem onClick={() => { navigate('/feed'); setMobileMenuOpen(false); }} sx={{ cursor: 'pointer' }}>
                       <ListItemIcon><RssFeed sx={{ color: '#FFD700' }} /></ListItemIcon>
                       <ListItemText primary="Feed" />
                     </ListItem>
-                    <ListItem button onClick={() => { navigate('/profile'); setMobileMenuOpen(false); }}>
+                    <ListItem onClick={() => { navigate('/profile'); setMobileMenuOpen(false); }} sx={{ cursor: 'pointer' }}>
                       <ListItemIcon><Person sx={{ color: '#FFD700' }} /></ListItemIcon>
                       <ListItemText primary="Profile" />
                     </ListItem>
-                    <ListItem button onClick={() => { logout(); setMobileMenuOpen(false); navigate('/'); }}>
+                    <ListItem onClick={() => { logout(); setMobileMenuOpen(false); navigate('/'); }} sx={{ cursor: 'pointer' }}>
                       <ListItemText primary="Logout" sx={{ color: '#FF6B6B' }} />
                     </ListItem>
                   </>
                 )}
                 {!user && (
-                  <ListItem button onClick={() => { navigate('/auth'); setMobileMenuOpen(false); }}>
+                  <ListItem onClick={() => { navigate('/auth'); setMobileMenuOpen(false); }} sx={{ cursor: 'pointer' }}>
                     <ListItemText primary="Sign In" sx={{ color: '#FFD700' }} />
                   </ListItem>
                 )}
