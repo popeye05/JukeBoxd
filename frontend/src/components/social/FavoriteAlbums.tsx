@@ -10,11 +10,11 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  Grid,
   Alert,
   CircularProgress,
 } from '@mui/material';
-import { Delete, Edit, Add, DragIndicator } from '@mui/icons-material';
+import Grid from '@mui/material/Grid2';
+import { Delete, Edit, Add } from '@mui/icons-material';
 import { favoritesService, FavoriteAlbum } from '../../services/favoritesService';
 import { albumService } from '../../services/albumService';
 import { Album } from '../../types';
@@ -185,7 +185,7 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
         ) : (
           <Grid container spacing={2}>
             {favorites.map((favorite, index) => (
-              <Grid item xs={6} sm={4} md={3} key={favorite.id}>
+              <Grid size={{ xs: 6, sm: 4, md: 3 }} key={favorite.id}>
                 <Card variant="outlined" sx={{ position: 'relative' }}>
                   <Box sx={{ position: 'relative', paddingTop: '100%' }}>
                     <CardMedia
@@ -300,7 +300,7 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
             {searchResults.length > 0 && (
               <Grid container spacing={2}>
                 {searchResults.map((album) => (
-                  <Grid item xs={6} sm={4} key={album.spotifyId}>
+                  <Grid size={{ xs: 6, sm: 4 }} key={album.spotifyId}>
                     <Card
                       sx={{ cursor: 'pointer', '&:hover': { transform: 'scale(1.02)' } }}
                       onClick={() => handleAddFavorite(album)}
