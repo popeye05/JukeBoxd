@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -46,6 +47,8 @@ const UserListDialog: React.FC<UserListDialogProps> = ({
   error,
   showFollowButtons = false
 }) => {
+  const navigate = useNavigate();
+
   if (loading) {
     return (
       <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -92,6 +95,16 @@ const UserListDialog: React.FC<UserListDialogProps> = ({
             {users.map((user) => (
               <ListItem
                 key={user.id}
+                onClick={() => {
+                  navigate(`/profile/${user.id}`);
+                  onClose();
+                }}
+                sx={{ 
+                  cursor: 'pointer',
+                  '&:hover': {
+                    backgroundColor: 'action.hover'
+                  }
+                }}
                 secondaryAction={
                   showFollowButtons && (
                     <FollowButton

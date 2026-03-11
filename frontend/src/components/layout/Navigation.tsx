@@ -87,6 +87,13 @@ const Navigation: React.FC = () => {
           <>
             <IconButton
               color="inherit"
+              onClick={() => navigate('/search')}
+              sx={{ ml: 1 }}
+            >
+              <Search />
+            </IconButton>
+            <IconButton
+              color="inherit"
               onClick={() => setMobileMenuOpen(true)}
               sx={{ ml: 1 }}
             >

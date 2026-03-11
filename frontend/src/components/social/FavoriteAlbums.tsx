@@ -163,13 +163,17 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>Top Favorite Albums</Typography>
           {isOwnProfile && (
-            <Box>
+            <Box display="flex" gap={1}>
               {favorites.length > 0 && (
                 <Button
                   size="small"
                   startIcon={<Edit />}
                   onClick={() => setEditMode(!editMode)}
-                  sx={{ mr: 1 }}
+                  sx={{ 
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                    px: { xs: 1, sm: 2 },
+                    py: { xs: 0.5, sm: 1 }
+                  }}
                 >
                   {editMode ? 'Done' : 'Edit'}
                 </Button>
@@ -179,6 +183,11 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
                 variant="contained"
                 startIcon={<Add />}
                 onClick={() => setAddDialogOpen(true)}
+                sx={{ 
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  px: { xs: 1, sm: 2 },
+                  py: { xs: 0.5, sm: 1 }
+                }}
               >
                 Add Album
               </Button>
