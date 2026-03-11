@@ -42,9 +42,17 @@ api.interceptors.response.use(
 
     // Handle specific HTTP status codes
     if (error.response?.status === 401) {
-      // Handle unauthorized access
-      removeToken();
-      window.location.href = '/auth';
+      // Don't redirect to auth for public endpoints (profile viewing)
+      const url = error.config?.url || '';
+      const isPublicEndpoint = url.includes('/social/profile/') || 
+                               url.includes('/albums/') ||
+                               url.includes('/reviews/recent');
+      
+      if (!isPublicEndpoint) {
+        // Handle unauthorized access for protected endpoints
+        removeToken();
+        window.location.href = '/auth';
+      }
     } else if (error.response?.status === 503) {
       // Handle service unavailable (e.g., Last.fm API down)
       error.message = 'Service temporarily unavailable. Please try again later.';
