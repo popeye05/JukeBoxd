@@ -16,7 +16,7 @@ const AuthPage: React.FC = () => {
   const switchToLogin = () => setIsLogin(true);
 
   const handleSkip = () => {
-    // Get the 'from' location if it exists
+    // Try multiple methods to determine where to go back to
     const from = (location.state as any)?.from;
     
     // Debug logging
@@ -24,18 +24,34 @@ const AuthPage: React.FC = () => {
     console.log('Full location state:', JSON.stringify(location.state, null, 2));
     console.log('From object:', from);
     console.log('From pathname:', from?.pathname);
+    console.log('Document referrer:', document.referrer);
     console.log('============================');
     
-    // If we came from a specific page and it's not /auth or /profile (protected)
+    // Method 1: Check location state
     if (from?.pathname && from.pathname !== '/auth' && from.pathname !== '/profile') {
-      // Go to that page
-      console.log('Navigating to:', from.pathname);
+      console.log('Method 1: Navigating to:', from.pathname);
       navigate(from.pathname, { replace: true });
-    } else {
-      // Otherwise go home
-      console.log('Navigating to home (fallback)');
-      navigate('/', { replace: true });
+      return;
     }
+    
+    // Method 2: Check if referrer is a profile page
+    if (document.referrer) {
+      try {
+        const referrerUrl = new URL(document.referrer);
+        const referrerPath = referrerUrl.pathname;
+        if (referrerPath.startsWith('/profile/') && referrerPath !== '/profile') {
+          console.log('Method 2: Navigating to referrer:', referrerPath);
+          navigate(referrerPath, { replace: true });
+          return;
+        }
+      } catch (e) {
+        console.log('Could not parse referrer');
+      }
+    }
+    
+    // Method 3: Fallback to home
+    console.log('Method 3: Navigating to home (fallback)');
+    navigate('/', { replace: true });
   };
 
   return (
