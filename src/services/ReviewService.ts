@@ -186,7 +186,7 @@ export class ReviewService {
 
     return { isValid: true };
   }
-}
+
   /**
    * Get review by ID with full details (user and album info)
    */
@@ -205,3 +205,4 @@ export class ReviewService {
     
     return reviewWithDetails || null;
   }
+}
