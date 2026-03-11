@@ -156,9 +156,9 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
 
   return (
     <Card>
-      <CardContent>
+      <CardContent sx={{ p: { xs: 1, sm: 2 } }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="h6">Top Favorite Albums</Typography>
+          <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>Top Favorite Albums</Typography>
           {isOwnProfile && (
             <Box>
               {favorites.length > 0 && (
@@ -198,11 +198,15 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
                 sm: 'repeat(4, 1fr)',
                 md: 'repeat(5, 1fr)',
               },
-              gap: { xs: 1, sm: 2 }
+              gap: { xs: 0.5, sm: 2 },
+              width: '100%'
             }}>
               {displayedFavorites.map((favorite, index) => (
               <Box key={favorite.id}>
-                <Card variant="outlined" sx={{ position: 'relative' }}>
+                <Card variant="outlined" sx={{ 
+                  position: 'relative',
+                  borderWidth: { xs: '0.5px', sm: '1px' }
+                }}>
                   <Box sx={{ position: 'relative', paddingTop: '100%' }}>
                     <CardMedia
                       component="img"
