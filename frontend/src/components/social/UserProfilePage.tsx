@@ -7,7 +7,6 @@ import {
   Button,
   Snackbar
 } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
 import { ArrowBack, Share } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserProfile } from './index';
@@ -98,18 +97,13 @@ const UserProfilePage: React.FC = () => {
           </Button>
         </Box>
 
-        <Grid container spacing={3}>
-          {/* Profile Section */}
-          <Grid size={12}>
-            <UserProfile
-              userId={profileUserId}
-              showFollowButton={!isOwnProfile}
-              compact={false}
-            />
-          </Grid>
-
-          {/* Content Tabs removed as per user request to drop Rating/Review tabs and integrate into main profile */}
-        </Grid>
+        <Box sx={{ mt: 2 }}>
+          <UserProfile
+            userId={profileUserId}
+            showFollowButton={!isOwnProfile}
+            compact={false}
+          />
+        </Box>
       </Box>
 
       <Snackbar
