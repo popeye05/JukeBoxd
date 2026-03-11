@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Box, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -15,43 +15,32 @@ const AuthPage: React.FC = () => {
   const switchToRegister = () => setIsLogin(false);
   const switchToLogin = () => setIsLogin(true);
 
-  const handleSkip = () => {
-    // Try multiple methods to determine where to go back to
+  // Store the 'from' location in sessionStorage when component mounts
+  useEffect(() => {
     const from = (location.state as any)?.from;
+    if (from?.pathname) {
+      sessionStorage.setItem('authReturnPath', from.pathname);
+    }
+  }, [location.state]);
+
+  const handleSkip = () => {
+    // Try to get return path from sessionStorage
+    const returnPath = sessionStorage.getItem('authReturnPath');
+    sessionStorage.removeItem('authReturnPath'); // Clean up
     
-    // Debug logging
     console.log('=== AUTH PAGE CLOSE DEBUG ===');
-    console.log('Full location state:', JSON.stringify(location.state, null, 2));
-    console.log('From object:', from);
-    console.log('From pathname:', from?.pathname);
-    console.log('Document referrer:', document.referrer);
+    console.log('Return path from storage:', returnPath);
+    console.log('Location state:', location.state);
     console.log('============================');
     
-    // Method 1: Check location state
-    if (from?.pathname && from.pathname !== '/auth' && from.pathname !== '/profile') {
-      console.log('Method 1: Navigating to:', from.pathname);
-      navigate(from.pathname, { replace: true });
-      return;
+    // If we have a return path and it's not a protected route
+    if (returnPath && returnPath !== '/auth' && returnPath !== '/profile') {
+      console.log('Navigating to stored path:', returnPath);
+      navigate(returnPath, { replace: true });
+    } else {
+      console.log('Navigating to home');
+      navigate('/', { replace: true });
     }
-    
-    // Method 2: Check if referrer is a profile page
-    if (document.referrer) {
-      try {
-        const referrerUrl = new URL(document.referrer);
-        const referrerPath = referrerUrl.pathname;
-        if (referrerPath.startsWith('/profile/') && referrerPath !== '/profile') {
-          console.log('Method 2: Navigating to referrer:', referrerPath);
-          navigate(referrerPath, { replace: true });
-          return;
-        }
-      } catch (e) {
-        console.log('Could not parse referrer');
-      }
-    }
-    
-    // Method 3: Fallback to home
-    console.log('Method 3: Navigating to home (fallback)');
-    navigate('/', { replace: true });
   };
 
   return (
