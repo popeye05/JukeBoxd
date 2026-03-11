@@ -132,7 +132,12 @@ const Navigation: React.FC = () => {
                   </>
                 )}
                 {!user && (
-                  <ListItem onClick={() => { navigate('/auth', { state: { from: location } }); setMobileMenuOpen(false); }} sx={{ cursor: 'pointer' }}>
+                  <ListItem onClick={() => { 
+                    sessionStorage.setItem('authReturnPath', location.pathname);
+                    console.log('Mobile Sign In - storing path:', location.pathname);
+                    navigate('/auth', { state: { from: location } }); 
+                    setMobileMenuOpen(false); 
+                  }} sx={{ cursor: 'pointer' }}>
                     <ListItemText primary="Sign In" sx={{ color: '#FFD700' }} />
                   </ListItem>
                 )}
@@ -298,7 +303,12 @@ const Navigation: React.FC = () => {
           ) : (
             <Button
               variant="contained"
-              onClick={() => navigate('/auth', { state: { from: location } })}
+              onClick={() => {
+                // Store current path before navigating to auth
+                sessionStorage.setItem('authReturnPath', location.pathname);
+                console.log('Desktop Sign In - storing path:', location.pathname);
+                navigate('/auth', { state: { from: location } });
+              }}
               sx={{
                 borderRadius: 2,
                 px: 3,

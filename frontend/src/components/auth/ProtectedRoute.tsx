@@ -30,6 +30,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }
 
   if (!user) {
+    // Store current path before redirecting
+    if (location.pathname !== '/auth') {
+      sessionStorage.setItem('authReturnPath', location.pathname);
+      console.log('ProtectedRoute - storing path before redirect:', location.pathname);
+    }
     // Redirect to login page with return url
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }

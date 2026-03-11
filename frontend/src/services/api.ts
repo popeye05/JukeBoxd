@@ -49,6 +49,13 @@ api.interceptors.response.use(
                                url.includes('/reviews/recent');
       
       if (!isPublicEndpoint) {
+        // Store current path before redirecting to auth
+        const currentPath = window.location.pathname;
+        if (currentPath !== '/auth') {
+          sessionStorage.setItem('authReturnPath', currentPath);
+          console.log('API 401 - storing path before redirect:', currentPath);
+        }
+        
         // Handle unauthorized access for protected endpoints
         removeToken();
         window.location.href = '/auth';
