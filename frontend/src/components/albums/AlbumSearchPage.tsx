@@ -20,10 +20,10 @@ export const AlbumSearchPage: React.FC = () => {
       <Fade in={!selectedAlbum} timeout={300}>
         <Box sx={{ display: selectedAlbum ? 'none' : 'block' }}>
           <Typography variant="h4" component="h1" gutterBottom>
-            Search Albums
+            Search Albums/Songs
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-            Discover albums from Last.fm's massive music database. Click on any album to see ratings and reviews.
+            Discover albums and songs from Last.fm's massive music database. Click on any item to see ratings and reviews.
           </Typography>
           
           <AlbumSearch onAlbumSelect={handleAlbumSelect} />

@@ -187,14 +187,14 @@ const Home = () => {
                 )}
             </Box>
 
-            {/* Trending Albums Section */}
+            {/* Trending Tracks Section */}
             <Box>
                 <Typography variant="h5" component="h2" fontWeight="bold" sx={{ mb: 3 }}>
-                    Trending on JukeBoxd
+                    Trending Tracks on JukeBoxd
                 </Typography>
                 {trendingAlbums.length === 0 ? (
                     <Typography variant="body1" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-                        Loading trending albums...
+                        Loading trending tracks...
                     </Typography>
                 ) : (
                     <Box sx={{ 
