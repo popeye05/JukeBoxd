@@ -3,11 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
   Container,
   Box,
-  Grid,
   Alert,
   Button,
   Snackbar
 } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
 import { ArrowBack, Share } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserProfile } from './index';
