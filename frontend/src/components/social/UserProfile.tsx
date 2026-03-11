@@ -309,7 +309,17 @@ const UserProfile: React.FC<UserProfileProps> = ({
               ) : (
                 <Box display="flex" flexDirection="column" gap={2}>
                   {(showAllReviews ? reviews : reviews.slice(0, 3)).map((review) => (
-                    <Card key={review.id} variant="outlined">
+                    <Card 
+                      key={review.id} 
+                      variant="outlined"
+                      sx={{ 
+                        cursor: 'pointer',
+                        '&:hover': {
+                          boxShadow: 2
+                        }
+                      }}
+                      onClick={() => navigate(`/review/${review.id}`)}
+                    >
                       <Box sx={{ display: 'flex', position: 'relative' }}>
                         {review.album && (
                           <CardMedia
