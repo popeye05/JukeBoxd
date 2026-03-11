@@ -19,12 +19,21 @@ const AuthPage: React.FC = () => {
     // Get the 'from' location if it exists
     const from = (location.state as any)?.from;
     
+    // Debug logging
+    console.log('=== AUTH PAGE CLOSE DEBUG ===');
+    console.log('Full location state:', JSON.stringify(location.state, null, 2));
+    console.log('From object:', from);
+    console.log('From pathname:', from?.pathname);
+    console.log('============================');
+    
     // If we came from a specific page and it's not /auth or /profile (protected)
     if (from?.pathname && from.pathname !== '/auth' && from.pathname !== '/profile') {
       // Go to that page
+      console.log('Navigating to:', from.pathname);
       navigate(from.pathname, { replace: true });
     } else {
       // Otherwise go home
+      console.log('Navigating to home (fallback)');
       navigate('/', { replace: true });
     }
   };
