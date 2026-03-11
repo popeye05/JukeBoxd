@@ -17,7 +17,17 @@ export const useAuthRedirect = () => {
 
     // If user is authenticated and on auth page, redirect to intended page or home
     if (user && location.pathname === '/auth') {
-      const from = (location.state as any)?.from?.pathname || '/';
+      // Try sessionStorage first, then location state, then default to home
+      const storedPath = sessionStorage.getItem('authReturnPath');
+      const statePath = (location.state as any)?.from?.pathname;
+      const from = storedPath || statePath || '/';
+      
+      // Clean up sessionStorage
+      if (storedPath) {
+        sessionStorage.removeItem('authReturnPath');
+      }
+      
+      console.log('Post-login redirect to:', from);
       navigate(from, { replace: true });
     }
   }, [user, loading, location, navigate]);
