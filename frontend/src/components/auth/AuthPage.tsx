@@ -18,10 +18,15 @@ const AuthPage: React.FC = () => {
   const handleSkip = () => {
     // If we have a 'from' location in state, go there
     // Otherwise go to home to avoid redirect loops
-    const from = (location.state as any)?.from?.pathname;
-    if (from && from !== '/auth') {
-      navigate(from, { replace: true });
+    const fromLocation = (location.state as any)?.from;
+    console.log('Auth page state:', location.state);
+    console.log('From location:', fromLocation);
+    
+    if (fromLocation?.pathname && fromLocation.pathname !== '/auth') {
+      console.log('Navigating to:', fromLocation.pathname);
+      navigate(fromLocation.pathname, { replace: true });
     } else {
+      console.log('Navigating to home');
       navigate('/', { replace: true });
     }
   };
