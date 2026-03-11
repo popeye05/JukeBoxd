@@ -162,6 +162,14 @@ router.put('/me/profile', [
     if (value.match(/^data:image\/(jpeg|jpg|png|gif|webp);base64,/)) return true;
     throw new Error('Invalid URL format for avatar - must be a valid URL or base64 image');
   }),
+  body('coverPhotoUrl').optional().trim().custom((value) => {
+    if (!value) return true; // Allow empty values
+    // Allow regular URLs
+    if (value.match(/^https?:\/\/.+/)) return true;
+    // Allow base64 data URLs for uploaded images
+    if (value.match(/^data:image\/(jpeg|jpg|png|gif|webp);base64,/)) return true;
+    throw new Error('Invalid URL format for cover photo - must be a valid URL or base64 image');
+  }),
   body('displayName').optional().trim().isLength({ max: 50 }).withMessage('Display name must be less than 50 characters')
 ], asyncHandler(async (req: Request, res: Response) => {
   // Check validation results
@@ -175,10 +183,10 @@ router.put('/me/profile', [
   }
 
   const user = getCurrentUser(req);
-  const { bio, avatarUrl, displayName } = req.body;
+  const { bio, avatarUrl, coverPhotoUrl, displayName } = req.body;
 
   try {
-    const updatedUser = await UserModel.update(user.id, { bio, avatarUrl, displayName });
+    const updatedUser = await UserModel.update(user.id, { bio, avatarUrl, coverPhotoUrl, displayName });
 
     if (!updatedUser) {
       throw createError('User not found', 404);

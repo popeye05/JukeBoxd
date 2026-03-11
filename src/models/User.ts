@@ -41,7 +41,7 @@ export class UserModel {
    */
   static async findByUsername(username: string): Promise<User | null> {
     const result: QueryResult<any> = await query(
-      'SELECT id, username, email, password_hash, bio, avatar_url, display_name, created_at, updated_at FROM users WHERE username = $1',
+      'SELECT id, username, email, password_hash, bio, avatar_url, cover_photo_url, display_name, created_at, updated_at FROM users WHERE username = $1',
       [username]
     );
 
@@ -57,6 +57,7 @@ export class UserModel {
       passwordHash: row.password_hash,
       bio: row.bio,
       avatarUrl: row.avatar_url,
+      coverPhotoUrl: row.cover_photo_url,
       displayName: row.display_name,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at)
@@ -68,7 +69,7 @@ export class UserModel {
    */
   static async findByEmail(email: string): Promise<User | null> {
     const result: QueryResult<any> = await query(
-      'SELECT id, username, email, password_hash, bio, avatar_url, display_name, created_at, updated_at FROM users WHERE email = $1',
+      'SELECT id, username, email, password_hash, bio, avatar_url, cover_photo_url, display_name, created_at, updated_at FROM users WHERE email = $1',
       [email]
     );
 
@@ -84,6 +85,7 @@ export class UserModel {
       passwordHash: row.password_hash,
       bio: row.bio,
       avatarUrl: row.avatar_url,
+      coverPhotoUrl: row.cover_photo_url,
       displayName: row.display_name,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at)
@@ -95,7 +97,7 @@ export class UserModel {
    */
   static async findById(id: string): Promise<User | null> {
     const result: QueryResult<any> = await query(
-      'SELECT id, username, email, password_hash, bio, avatar_url, display_name, created_at, updated_at FROM users WHERE id = $1',
+      'SELECT id, username, email, password_hash, bio, avatar_url, cover_photo_url, display_name, created_at, updated_at FROM users WHERE id = $1',
       [id]
     );
 
@@ -111,6 +113,7 @@ export class UserModel {
       passwordHash: row.password_hash,
       bio: row.bio,
       avatarUrl: row.avatar_url,
+      coverPhotoUrl: row.cover_photo_url,
       displayName: row.display_name,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at)
@@ -134,6 +137,7 @@ export class UserModel {
       email: user.email,
       bio: user.bio || null,
       avatarUrl: user.avatarUrl || null,
+      coverPhotoUrl: user.coverPhotoUrl || null,
       displayName: user.displayName || null,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt
@@ -193,6 +197,10 @@ export class UserModel {
       fields.push(`avatar_url = $${paramCount++}`);
       values.push(updates.avatarUrl);
     }
+    if (updates.coverPhotoUrl !== undefined) {
+      fields.push(`cover_photo_url = $${paramCount++}`);
+      values.push(updates.coverPhotoUrl);
+    }
     if (updates.displayName !== undefined) {
       fields.push(`display_name = $${paramCount++}`);
       values.push(updates.displayName);
@@ -222,6 +230,7 @@ export class UserModel {
       passwordHash: row.password_hash,
       bio: row.bio,
       avatarUrl: row.avatar_url,
+      coverPhotoUrl: row.cover_photo_url,
       displayName: row.display_name,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at)

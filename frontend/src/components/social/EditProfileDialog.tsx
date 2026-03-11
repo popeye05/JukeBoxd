@@ -9,7 +9,8 @@ import {
     Box,
     Alert,
     Avatar,
-    IconButton
+    IconButton,
+    Typography
 } from '@mui/material';
 import { PhotoCamera } from '@mui/icons-material';
 import { UserProfile } from '../../types';
@@ -31,19 +32,22 @@ const EditProfileDialog: React.FC<EditProfileDialogProps> = ({
     const [displayName, setDisplayName] = useState(currentUser.displayName || '');
     const [bio, setBio] = useState(currentUser.bio || '');
     const [avatarUrl, setAvatarUrl] = useState(currentUser.avatarUrl || '');
+    const [coverPhotoUrl, setCoverPhotoUrl] = useState(currentUser.coverPhotoUrl || '');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [uploadingImage, setUploadingImage] = useState(false);
+    const [uploadingAvatar, setUploadingAvatar] = useState(false);
+    const [uploadingCover, setUploadingCover] = useState(false);
 
     React.useEffect(() => {
         if (open) {
             setDisplayName(currentUser.displayName || '');
             setBio(currentUser.bio || '');
             setAvatarUrl(currentUser.avatarUrl || '');
+            setCoverPhotoUrl(currentUser.coverPhotoUrl || '');
         }
     }, [open, currentUser]);
 
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>, type: 'avatar' | 'cover') => {
         const file = event.target.files?.[0];
         if (!file) return;
 
@@ -59,17 +63,30 @@ const EditProfileDialog: React.FC<EditProfileDialogProps> = ({
             return;
         }
 
-        setUploadingImage(true);
+        if (type === 'avatar') {
+            setUploadingAvatar(true);
+        } else {
+            setUploadingCover(true);
+        }
         setError(null);
 
         const reader = new FileReader();
         reader.onloadend = () => {
-            setAvatarUrl(reader.result as string);
-            setUploadingImage(false);
+            if (type === 'avatar') {
+                setAvatarUrl(reader.result as string);
+                setUploadingAvatar(false);
+            } else {
+                setCoverPhotoUrl(reader.result as string);
+                setUploadingCover(false);
+            }
         };
         reader.onerror = () => {
             setError('Failed to read image file');
-            setUploadingImage(false);
+            if (type === 'avatar') {
+                setUploadingAvatar(false);
+            } else {
+                setUploadingCover(false);
+            }
         };
         reader.readAsDataURL(file);
     };
@@ -82,7 +99,8 @@ const EditProfileDialog: React.FC<EditProfileDialogProps> = ({
             const response = await api.put('/auth/me/profile', {
                 displayName,
                 bio,
-                avatarUrl
+                avatarUrl,
+                coverPhotoUrl
             });
 
             if (response.data.success) {
@@ -103,6 +121,69 @@ const EditProfileDialog: React.FC<EditProfileDialogProps> = ({
             <DialogContent>
                 {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
                 <Box display="flex" flexDirection="column" gap={2} mt={1}>
+                    {/* Cover Photo Upload Section */}
+                    <Box>
+                        <Typography variant="subtitle2" gutterBottom>Cover Photo</Typography>
+                        <Box
+                            sx={{
+                                width: '100%',
+                                height: 120,
+                                borderRadius: 2,
+                                border: '2px dashed #ccc',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundImage: coverPhotoUrl ? `url(${coverPhotoUrl})` : 'none',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                position: 'relative',
+                                overflow: 'hidden'
+                            }}
+                        >
+                            {!coverPhotoUrl && (
+                                <Typography variant="body2" color="text.secondary">
+                                    Click to upload cover photo
+                                </Typography>
+                            )}
+                            <input
+                                accept="image/*"
+                                style={{ 
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '100%',
+                                    opacity: 0,
+                                    cursor: 'pointer'
+                                }}
+                                id="cover-upload"
+                                type="file"
+                                onChange={(e) => handleImageUpload(e, 'cover')}
+                            />
+                        </Box>
+                        <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
+                            <Button
+                                size="small"
+                                variant="outlined"
+                                startIcon={<PhotoCamera />}
+                                disabled={uploadingCover}
+                                onClick={() => document.getElementById('cover-upload')?.click()}
+                            >
+                                {uploadingCover ? 'Uploading...' : 'Change Cover'}
+                            </Button>
+                            {coverPhotoUrl && (
+                                <Button
+                                    size="small"
+                                    variant="text"
+                                    color="error"
+                                    onClick={() => setCoverPhotoUrl('')}
+                                >
+                                    Remove
+                                </Button>
+                            )}
+                        </Box>
+                    </Box>
+
                     {/* Avatar Upload Section */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                         <Avatar
@@ -117,16 +198,16 @@ const EditProfileDialog: React.FC<EditProfileDialogProps> = ({
                                 style={{ display: 'none' }}
                                 id="avatar-upload"
                                 type="file"
-                                onChange={handleImageUpload}
+                                onChange={(e) => handleImageUpload(e, 'avatar')}
                             />
                             <label htmlFor="avatar-upload">
                                 <Button
                                     variant="outlined"
                                     component="span"
                                     startIcon={<PhotoCamera />}
-                                    disabled={uploadingImage}
+                                    disabled={uploadingAvatar}
                                 >
-                                    {uploadingImage ? 'Uploading...' : 'Upload Photo'}
+                                    {uploadingAvatar ? 'Uploading...' : 'Upload Photo'}
                                 </Button>
                             </label>
                             <Box sx={{ mt: 0.5 }}>
@@ -162,7 +243,7 @@ const EditProfileDialog: React.FC<EditProfileDialogProps> = ({
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} disabled={loading}>Cancel</Button>
-                <Button onClick={handleSubmit} variant="contained" disabled={loading || uploadingImage}>
+                <Button onClick={handleSubmit} variant="contained" disabled={loading || uploadingAvatar || uploadingCover}>
                     {loading ? 'Saving...' : 'Save'}
                 </Button>
             </DialogActions>

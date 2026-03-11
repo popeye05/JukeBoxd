@@ -166,8 +166,24 @@ const UserProfile: React.FC<UserProfileProps> = ({
 
   return (
     <Box display="flex" flexDirection="column" gap={3}>
+      {/* Cover Photo Banner */}
+      {profile.coverPhotoUrl && (
+        <Box
+          sx={{
+            width: '100%',
+            height: { xs: 200, md: 300 },
+            borderRadius: 2,
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${profile.coverPhotoUrl})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            position: 'relative',
+            mb: -6 // Overlap with profile card
+          }}
+        />
+      )}
+
       {/* Profile Card */}
-      <Card>
+      <Card sx={{ position: 'relative', zIndex: 1 }}>
         <CardContent>
           <Box display="flex" flexDirection="column" gap={3}>
             {/* Header Section */}

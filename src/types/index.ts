@@ -8,6 +8,7 @@ export interface User {
   passwordHash: string;
   bio?: string | null;
   avatarUrl?: string | null;
+  coverPhotoUrl?: string | null;
   displayName?: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -19,6 +20,7 @@ export interface UserProfile {
   email: string;
   bio?: string | null;
   avatarUrl?: string | null;
+  coverPhotoUrl?: string | null;
   displayName?: string | null;
   createdAt: Date;
   updatedAt: Date;
