@@ -120,10 +120,6 @@ const UserProfilePage: React.FC = () => {
       />
     </Container>
   );
-        </Grid>
-      </Box>
-    </Container>
-  );
 };
 
 export default UserProfilePage;
