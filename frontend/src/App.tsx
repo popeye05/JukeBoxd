@@ -103,11 +103,7 @@ function App() {
                 />
                 <Route
                   path="/profile/:userId"
-                  element={
-                    <ProtectedRoute>
-                      <UserProfilePage />
-                    </ProtectedRoute>
-                  }
+                  element={<UserProfilePage />}
                 />
                 <Route
                   path="/feed"
