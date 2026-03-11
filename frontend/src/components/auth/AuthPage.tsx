@@ -16,19 +16,9 @@ const AuthPage: React.FC = () => {
   const switchToLogin = () => setIsLogin(true);
 
   const handleSkip = () => {
-    // If we have a 'from' location in state, go there
-    // Otherwise go to home to avoid redirect loops
-    const fromLocation = (location.state as any)?.from;
-    console.log('Auth page state:', location.state);
-    console.log('From location:', fromLocation);
-    
-    if (fromLocation?.pathname && fromLocation.pathname !== '/auth') {
-      console.log('Navigating to:', fromLocation.pathname);
-      navigate(fromLocation.pathname, { replace: true });
-    } else {
-      console.log('Navigating to home');
-      navigate('/', { replace: true });
-    }
+    // Simply go back to the previous page
+    // Since profiles are public, this will work fine
+    navigate(-1);
   };
 
   return (
