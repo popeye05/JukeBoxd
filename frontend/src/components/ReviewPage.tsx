@@ -29,6 +29,7 @@ import {
   Send
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
+import api from '../services/api';
 
 interface ReviewData {
   id: string;
@@ -86,10 +87,6 @@ const ReviewPage = () => {
   const [shareMessage, setShareMessage] = useState('');
   const [showShareMessage, setShowShareMessage] = useState(false);
 
-  const apiUrl = process.env.REACT_APP_API_URL || (
-    process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:3001/api'
-  );
-
   useEffect(() => {
     const fetchReview = async () => {
       if (!reviewId) {
@@ -99,14 +96,8 @@ const ReviewPage = () => {
       }
 
       try {
-        const token = localStorage.getItem('token');
-        const headers: HeadersInit = {};
-        if (token) {
-          headers.Authorization = `Bearer ${token}`;
-        }
-
-        const response = await fetch(`${apiUrl}/reviews/${reviewId}`, { headers });
-        const data = await response.json();
+        const response = await api.get(`/reviews/${reviewId}`);
+        const data = response.data;
         
         if (data.success) {
           setReview(data.data.review);
@@ -116,7 +107,7 @@ const ReviewPage = () => {
         } else {
           setError('Review not found');
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error('Failed to fetch review:', err);
         setError('Failed to load review');
       } finally {
@@ -125,7 +116,7 @@ const ReviewPage = () => {
     };
 
     fetchReview();
-  }, [reviewId, apiUrl]);
+  }, [reviewId]);
 
   // Auto-fetch comments when comment section is shown and there are comments
   useEffect(() => {
@@ -147,16 +138,9 @@ const ReviewPage = () => {
 
     setLikingInProgress(true);
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/reviews/${reviewId}/like`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      const data = await response.json();
+      const response = await api.post(`/reviews/${reviewId}/like`);
+      const data = response.data;
+      
       if (data.success) {
         setHasLiked(data.data.liked);
         setLikeCount(data.data.likeCount);
@@ -165,7 +149,7 @@ const ReviewPage = () => {
         setShareMessage('Failed to like review');
         setShowShareMessage(true);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to like review:', err);
       setShareMessage('Failed to like review');
       setShowShareMessage(true);
@@ -178,14 +162,14 @@ const ReviewPage = () => {
     if (!reviewId) return;
 
     try {
-      const response = await fetch(`${apiUrl}/reviews/${reviewId}/comments`);
-      const data = await response.json();
+      const response = await api.get(`/reviews/${reviewId}/comments`);
+      const data = response.data;
       
       if (data.success) {
         setComments(data.data.comments);
         setCommentCount(data.data.total);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to fetch comments:', err);
     }
   };
@@ -195,17 +179,11 @@ const ReviewPage = () => {
 
     setCommentingInProgress(true);
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/reviews/${reviewId}/comments`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ content: newComment.trim() })
+      const response = await api.post(`/reviews/${reviewId}/comments`, {
+        content: newComment.trim()
       });
-
-      const data = await response.json();
+      const data = response.data;
+      
       if (data.success) {
         setNewComment('');
         // Refresh comments to get the latest list
@@ -217,7 +195,7 @@ const ReviewPage = () => {
         setShareMessage('Failed to add comment');
         setShowShareMessage(true);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to add comment:', err);
       setShareMessage('Failed to add comment');
       setShowShareMessage(true);
