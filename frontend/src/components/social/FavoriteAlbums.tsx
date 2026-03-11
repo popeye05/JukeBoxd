@@ -194,11 +194,11 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
             <Box sx={{ 
               display: 'grid',
               gridTemplateColumns: {
-                xs: 'repeat(2, 1fr)',
-                sm: 'repeat(3, 1fr)',
-                md: 'repeat(4, 1fr)',
+                xs: 'repeat(3, 1fr)',
+                sm: 'repeat(4, 1fr)',
+                md: 'repeat(5, 1fr)',
               },
-              gap: 2
+              gap: { xs: 1, sm: 2 }
             }}>
               {displayedFavorites.map((favorite, index) => (
               <Box key={favorite.id}>
@@ -220,18 +220,18 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
                     <Box
                       sx={{
                         position: 'absolute',
-                        top: 8,
-                        left: 8,
+                        top: { xs: 4, sm: 8 },
+                        left: { xs: 4, sm: 8 },
                         bgcolor: 'primary.main',
                         color: 'black',
                         borderRadius: '50%',
-                        width: 32,
-                        height: 32,
+                        width: { xs: 24, sm: 32 },
+                        height: { xs: 24, sm: 32 },
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontWeight: 'bold',
-                        fontSize: '1rem'
+                        fontSize: { xs: '0.75rem', sm: '1rem' }
                       }}
                     >
                       {index + 1}
@@ -274,11 +274,23 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
                       </Box>
                     )}
                   </Box>
-                  <CardContent sx={{ p: 1 }}>
-                    <Typography variant="caption" noWrap display="block" fontWeight="bold">
+                  <CardContent sx={{ p: { xs: 0.5, sm: 1 } }}>
+                    <Typography 
+                      variant="caption" 
+                      noWrap 
+                      display="block" 
+                      fontWeight="bold"
+                      sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
+                    >
                       {favorite.album?.name}
                     </Typography>
-                    <Typography variant="caption" noWrap display="block" color="text.secondary">
+                    <Typography 
+                      variant="caption" 
+                      noWrap 
+                      display="block" 
+                      color="text.secondary"
+                      sx={{ fontSize: { xs: '0.6rem', sm: '0.75rem' } }}
+                    >
                       {favorite.album?.artist}
                     </Typography>
                   </CardContent>
