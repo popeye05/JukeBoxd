@@ -1,4 +1,5 @@
-import { query, QueryResult } from '@/config/database';
+import { query } from '@/config/database';
+import { QueryResult } from 'pg';
 
 export interface ReviewComment {
   id: string;
@@ -92,6 +93,6 @@ export class ReviewCommentModel {
       [commentId, userId]
     );
 
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 }
