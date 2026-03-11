@@ -428,21 +428,10 @@ export class LastFmService {
 
       const albums = response.data.albums?.album?.map(this.mapLastFmAlbumToAlbum) || [];
       
-      // Filter out albums with no valid images (Last.fm chart API sometimes returns empty images)
-      const albumsWithImages = albums.filter(album => {
-        const hasValidImage = album.imageUrl && 
-                             album.imageUrl !== '' && 
-                             !album.imageUrl.includes('2a96cbd8b46e442fc41c2b86b821562f');
-        if (!hasValidImage) {
-          console.log(`⚠️ Skipping album "${album.name}" by ${album.artist} - no valid image`);
-        }
-        return hasValidImage;
-      });
-      
       // Cache the results
-      await cacheSet(cacheKey, JSON.stringify(albumsWithImages), this.searchCacheTTL);
+      await cacheSet(cacheKey, JSON.stringify(albums), this.searchCacheTTL);
       
-      return albumsWithImages;
+      return albums;
     } catch (error) {
       console.error('Error getting top albums:', error);
       

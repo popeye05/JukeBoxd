@@ -9,8 +9,7 @@ import {
     CardContent,
     Button,
     Divider,
-    Avatar,
-    Paper
+    Avatar
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -52,7 +51,7 @@ const Home = () => {
                         ? '/api'
                         : 'http://localhost:3001/api'
                 );
-                const response = await fetch(`${apiUrl}/albums/trending?limit=4`);
+                const response = await fetch(`${apiUrl}/albums/trending?limit=10`);
                 const data = await response.json();
 
                 if (data.success && data.data.albums) {
@@ -198,54 +197,59 @@ const Home = () => {
                         Loading trending albums...
                     </Typography>
                 ) : (
-                    <Grid container spacing={2}>
-                        {trendingAlbums.map((album) => (
-                            <Grid key={album.spotifyId} size={{ xs: 6, sm: 3 }}>
-                                <Paper
-                                    elevation={0}
-                                    sx={{
-                                        position: 'relative',
-                                        overflow: 'hidden',
-                                        borderRadius: 2,
-                                        transition: 'transform 0.2s',
-                                        '&:hover': { transform: 'scale(1.02)' },
-                                        cursor: 'pointer'
-                                    }}
-                                    onClick={() => navigate('/search')}
-                                >
-                                    <Box
-                                        component="img"
-                                        src={album.imageUrl || 'https://via.placeholder.com/300'}
-                                        alt={album.name}
-                                        sx={{
-                                            width: '100%',
-                                            height: 'auto',
-                                            display: 'block',
-                                            aspectRatio: '1/1'
-                                        }}
-                                    />
-                                    <Box
-                                        sx={{
-                                            position: 'absolute',
-                                            bottom: 0,
-                                            left: 0,
-                                            right: 0,
-                                            background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)',
-                                            p: 2,
-                                            pt: 6
+                    <Box sx={{ 
+                        bgcolor: 'background.paper', 
+                        borderRadius: 2,
+                        overflow: 'hidden'
+                    }}>
+                        {trendingAlbums.map((album, index) => (
+                            <Box
+                                key={album.spotifyId}
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    p: 2,
+                                    borderBottom: index < trendingAlbums.length - 1 ? '1px solid' : 'none',
+                                    borderColor: 'divider',
+                                    transition: 'background-color 0.2s',
+                                    '&:hover': {
+                                        bgcolor: 'action.hover'
+                                    }
+                                }}
+                            >
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
+                                    <Typography 
+                                        variant="h6" 
+                                        sx={{ 
+                                            minWidth: '30px',
+                                            color: 'text.secondary',
+                                            fontWeight: 'bold'
                                         }}
                                     >
-                                        <Typography variant="subtitle1" fontWeight="bold" noWrap>
+                                        {index + 1}
+                                    </Typography>
+                                    <Box sx={{ flex: 1 }}>
+                                        <Typography variant="body1" fontWeight="bold">
                                             {album.name}
                                         </Typography>
-                                        <Typography variant="caption" color="text.secondary" noWrap>
+                                        <Typography variant="body2" color="text.secondary">
                                             {album.artist}
                                         </Typography>
                                     </Box>
-                                </Paper>
-                            </Grid>
+                                </Box>
+                                <Button
+                                    variant="outlined"
+                                    size="small"
+                                    startIcon={<Star />}
+                                    onClick={() => navigate(`/album/${album.spotifyId}`)}
+                                    sx={{ minWidth: '100px' }}
+                                >
+                                    Rate
+                                </Button>
+                            </Box>
                         ))}
-                    </Grid>
+                    </Box>
                 )}
             </Box>
         </Box>
