@@ -32,6 +32,9 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Album[]>([]);
   const [searching, setSearching] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+
+  const displayedFavorites = showAll ? favorites : favorites.slice(0, 10);
 
   useEffect(() => {
     fetchFavorites();
@@ -187,16 +190,17 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
             </Typography>
           </Box>
         ) : (
-          <Box sx={{ 
-            display: 'grid',
-            gridTemplateColumns: {
-              xs: 'repeat(2, 1fr)',
-              sm: 'repeat(3, 1fr)',
-              md: 'repeat(4, 1fr)',
-            },
-            gap: 2
-          }}>
-            {favorites.map((favorite, index) => (
+          <>
+            <Box sx={{ 
+              display: 'grid',
+              gridTemplateColumns: {
+                xs: 'repeat(2, 1fr)',
+                sm: 'repeat(3, 1fr)',
+                md: 'repeat(4, 1fr)',
+              },
+              gap: 2
+            }}>
+              {displayedFavorites.map((favorite, index) => (
               <Box key={favorite.id}>
                 <Card variant="outlined" sx={{ position: 'relative' }}>
                   <Box sx={{ position: 'relative', paddingTop: '100%' }}>
@@ -282,6 +286,18 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
               </Box>
             ))}
           </Box>
+
+          {favorites.length > 10 && (
+            <Box sx={{ mt: 2, textAlign: 'center' }}>
+              <Button
+                variant="outlined"
+                onClick={() => setShowAll(!showAll)}
+              >
+                {showAll ? 'Show Less' : `See More (${favorites.length - 10} more)`}
+              </Button>
+            </Box>
+          )}
+        </>
         )}
 
         {/* Add Album Dialog */}

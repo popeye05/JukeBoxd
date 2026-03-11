@@ -146,19 +146,34 @@ router.get('/:spotifyId', [
     // First try to get from our database
     let album = await AlbumModel.findBySpotifyId(spotifyId!);
     
-    // If not in our database, get from Last.fm and save it
+    // If not in our database, try to get from Last.fm and save it
     if (!album) {
-      const lastFmAlbum = await musicService.getAlbum(spotifyId!);
-      
-      // Save to our database
-      album = await AlbumModel.findOrCreate(
-        lastFmAlbum.spotifyId,
-        lastFmAlbum.name,
-        lastFmAlbum.artist,
-        lastFmAlbum.releaseDate,
-        lastFmAlbum.imageUrl,
-        lastFmAlbum.spotifyUrl
-      );
+      try {
+        const lastFmAlbum = await musicService.getAlbum(spotifyId!);
+        
+        // Save to our database
+        album = await AlbumModel.findOrCreate(
+          lastFmAlbum.spotifyId,
+          lastFmAlbum.name,
+          lastFmAlbum.artist,
+          lastFmAlbum.releaseDate,
+          lastFmAlbum.imageUrl,
+          lastFmAlbum.spotifyUrl
+        );
+      } catch (lastFmError: any) {
+        console.error('Failed to fetch from Last.fm:', lastFmError.message);
+        // If Last.fm fails, create a basic entry from the ID
+        // This handles tracks that might not have full album data
+        const [artist, name] = spotifyId!.includes('|') ? spotifyId!.split('|') : ['Unknown Artist', spotifyId!];
+        album = await AlbumModel.findOrCreate(
+          spotifyId!,
+          name,
+          artist,
+          new Date(),
+          '',
+          `https://www.last.fm/music/${encodeURIComponent(artist)}/_/${encodeURIComponent(name)}`
+        );
+      }
     }
 
     // Get album statistics
