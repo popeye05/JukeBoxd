@@ -127,6 +127,13 @@ const ReviewPage = () => {
     fetchReview();
   }, [reviewId, apiUrl]);
 
+  // Auto-fetch comments when comment section is shown and there are comments
+  useEffect(() => {
+    if (showComments && commentCount > 0) {
+      fetchComments();
+    }
+  }, [showComments, commentCount]);
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -153,9 +160,15 @@ const ReviewPage = () => {
       if (data.success) {
         setHasLiked(data.data.liked);
         setLikeCount(data.data.likeCount);
+      } else {
+        console.error('Failed to like review:', data.error);
+        setShareMessage('Failed to like review');
+        setShowShareMessage(true);
       }
     } catch (err) {
       console.error('Failed to like review:', err);
+      setShareMessage('Failed to like review');
+      setShowShareMessage(true);
     } finally {
       setLikingInProgress(false);
     }
@@ -195,12 +208,19 @@ const ReviewPage = () => {
       const data = await response.json();
       if (data.success) {
         setNewComment('');
-        setCommentCount(prev => prev + 1);
-        // Refresh comments
+        // Refresh comments to get the latest list
         await fetchComments();
+        setShareMessage('Comment added successfully!');
+        setShowShareMessage(true);
+      } else {
+        console.error('Failed to add comment:', data.error);
+        setShareMessage('Failed to add comment');
+        setShowShareMessage(true);
       }
     } catch (err) {
       console.error('Failed to add comment:', err);
+      setShareMessage('Failed to add comment');
+      setShowShareMessage(true);
     } finally {
       setCommentingInProgress(false);
     }
@@ -236,8 +256,11 @@ const ReviewPage = () => {
   };
 
   const toggleComments = () => {
-    setShowComments(!showComments);
-    if (!showComments && comments.length === 0) {
+    const newShowComments = !showComments;
+    setShowComments(newShowComments);
+    
+    // Always fetch comments when opening the section to ensure we have the latest
+    if (newShowComments) {
       fetchComments();
     }
   };
