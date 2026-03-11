@@ -17,7 +17,7 @@ import './App.css';
 
 import Home from './pages/Home';
 import DiscoverUsersPage from './pages/DiscoverUsersPage';
-import ReviewPage from './pages/ReviewPage';
+import ReviewPage from './components/ReviewPage';
 
 const Search = () => <AlbumSearchPage />;
 
