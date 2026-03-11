@@ -16,8 +16,14 @@ const AuthPage: React.FC = () => {
   const switchToLogin = () => setIsLogin(true);
 
   const handleSkip = () => {
-    // Go back to previous page in browser history
-    navigate(-1);
+    // If we have a 'from' location in state, go there
+    // Otherwise go to home to avoid redirect loops
+    const from = (location.state as any)?.from?.pathname;
+    if (from && from !== '/auth') {
+      navigate(from, { replace: true });
+    } else {
+      navigate('/', { replace: true });
+    }
   };
 
   return (
