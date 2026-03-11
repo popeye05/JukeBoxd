@@ -33,7 +33,7 @@ interface LastFmAlbumInfoResponse {
   album: LastFmAlbum;
 }
 
-// Mock album data for fallback (same as before but with Last.fm URLs)
+// Mock album data for fallback - using placeholder images that actually work
 const MOCK_ALBUMS: Album[] = [
   {
     id: 'mock-1',
@@ -41,7 +41,7 @@ const MOCK_ALBUMS: Album[] = [
     name: 'Abbey Road',
     artist: 'The Beatles',
     releaseDate: new Date('1969-09-26'),
-    imageUrl: 'https://lastfm.freetls.fastly.net/i/u/640x640/3b54885952161aaea4ce2965b2db1638.png',
+    imageUrl: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=640&h=640&fit=crop',
     spotifyUrl: 'https://www.last.fm/music/The+Beatles/Abbey+Road',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -52,7 +52,7 @@ const MOCK_ALBUMS: Album[] = [
     name: 'The Dark Side of the Moon',
     artist: 'Pink Floyd',
     releaseDate: new Date('1973-03-01'),
-    imageUrl: 'https://lastfm.freetls.fastly.net/i/u/640x640/8b5cf1baf4b842b3c1d7bb84b7bb3991.png',
+    imageUrl: 'https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=640&h=640&fit=crop',
     spotifyUrl: 'https://www.last.fm/music/Pink+Floyd/The+Dark+Side+of+the+Moon',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -63,7 +63,7 @@ const MOCK_ALBUMS: Album[] = [
     name: 'Thriller',
     artist: 'Michael Jackson',
     releaseDate: new Date('1982-11-30'),
-    imageUrl: 'https://lastfm.freetls.fastly.net/i/u/640x640/c6f59c1e5e7240a4c0d427abd71f3dbb.png',
+    imageUrl: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=640&h=640&fit=crop',
     spotifyUrl: 'https://www.last.fm/music/Michael+Jackson/Thriller',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -74,7 +74,7 @@ const MOCK_ALBUMS: Album[] = [
     name: 'Back in Black',
     artist: 'AC/DC',
     releaseDate: new Date('1980-07-25'),
-    imageUrl: 'https://lastfm.freetls.fastly.net/i/u/640x640/c14b155c696e4a82c59d158d54a5b7a6.png',
+    imageUrl: 'https://images.unsplash.com/photo-1458560871784-56d23406c091?w=640&h=640&fit=crop',
     spotifyUrl: 'https://www.last.fm/music/AC%2FDC/Back+in+Black',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -85,7 +85,7 @@ const MOCK_ALBUMS: Album[] = [
     name: 'Hotel California',
     artist: 'Eagles',
     releaseDate: new Date('1976-12-08'),
-    imageUrl: 'https://lastfm.freetls.fastly.net/i/u/640x640/2a96cbd8b46e442fc41c2b86b821562f.png',
+    imageUrl: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=640&h=640&fit=crop',
     spotifyUrl: 'https://www.last.fm/music/Eagles/Hotel+California',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -96,7 +96,7 @@ const MOCK_ALBUMS: Album[] = [
     name: 'Rumours',
     artist: 'Fleetwood Mac',
     releaseDate: new Date('1977-02-04'),
-    imageUrl: 'https://lastfm.freetls.fastly.net/i/u/640x640/3b54885952161aaea4ce2965b2db1638.png',
+    imageUrl: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=640&h=640&fit=crop',
     spotifyUrl: 'https://www.last.fm/music/Fleetwood+Mac/Rumours',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -107,7 +107,7 @@ const MOCK_ALBUMS: Album[] = [
     name: 'Led Zeppelin IV',
     artist: 'Led Zeppelin',
     releaseDate: new Date('1971-11-08'),
-    imageUrl: 'https://lastfm.freetls.fastly.net/i/u/640x640/c8a11e48c2a9357b0d58b5e6.png',
+    imageUrl: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=640&h=640&fit=crop',
     spotifyUrl: 'https://www.last.fm/music/Led+Zeppelin/Led+Zeppelin+IV',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -118,7 +118,7 @@ const MOCK_ALBUMS: Album[] = [
     name: 'The Wall',
     artist: 'Pink Floyd',
     releaseDate: new Date('1979-11-30'),
-    imageUrl: 'https://lastfm.freetls.fastly.net/i/u/640x640/f05e5ac5b6c8b4b4b4b4b4b4.png',
+    imageUrl: 'https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=640&h=640&fit=crop',
     spotifyUrl: 'https://www.last.fm/music/Pink+Floyd/The+Wall',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -129,7 +129,7 @@ const MOCK_ALBUMS: Album[] = [
     name: 'Born to Run',
     artist: 'Bruce Springsteen',
     releaseDate: new Date('1975-08-25'),
-    imageUrl: 'https://lastfm.freetls.fastly.net/i/u/640x640/a3b4c5d6e7f8g9h0i1j2k3l4.png',
+    imageUrl: 'https://images.unsplash.com/photo-1501612780327-45045538702b?w=640&h=640&fit=crop',
     spotifyUrl: 'https://www.last.fm/music/Bruce+Springsteen/Born+to+Run',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -140,7 +140,7 @@ const MOCK_ALBUMS: Album[] = [
     name: 'Kind of Blue',
     artist: 'Miles Davis',
     releaseDate: new Date('1959-08-17'),
-    imageUrl: 'https://lastfm.freetls.fastly.net/i/u/640x640/m5n6o7p8q9r0s1t2u3v4w5x6.png',
+    imageUrl: 'https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=640&h=640&fit=crop',
     spotifyUrl: 'https://www.last.fm/music/Miles+Davis/Kind+of+Blue',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -151,7 +151,7 @@ const MOCK_ALBUMS: Album[] = [
     name: 'Nevermind',
     artist: 'Nirvana',
     releaseDate: new Date('1991-09-24'),
-    imageUrl: 'https://lastfm.freetls.fastly.net/i/u/640x640/y7z8a9b0c1d2e3f4g5h6i7j8.png',
+    imageUrl: 'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=640&h=640&fit=crop',
     spotifyUrl: 'https://www.last.fm/music/Nirvana/Nevermind',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -162,7 +162,7 @@ const MOCK_ALBUMS: Album[] = [
     name: 'OK Computer',
     artist: 'Radiohead',
     releaseDate: new Date('1997-06-16'),
-    imageUrl: 'https://lastfm.freetls.fastly.net/i/u/640x640/k9l0m1n2o3p4q5r6s7t8u9v0.png',
+    imageUrl: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=640&h=640&fit=crop',
     spotifyUrl: 'https://www.last.fm/music/Radiohead/OK+Computer',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -428,10 +428,21 @@ export class LastFmService {
 
       const albums = response.data.albums?.album?.map(this.mapLastFmAlbumToAlbum) || [];
       
-      // Cache the results
-      await cacheSet(cacheKey, JSON.stringify(albums), this.searchCacheTTL);
+      // Filter out albums with no valid images (Last.fm chart API sometimes returns empty images)
+      const albumsWithImages = albums.filter(album => {
+        const hasValidImage = album.imageUrl && 
+                             album.imageUrl !== '' && 
+                             !album.imageUrl.includes('2a96cbd8b46e442fc41c2b86b821562f');
+        if (!hasValidImage) {
+          console.log(`⚠️ Skipping album "${album.name}" by ${album.artist} - no valid image`);
+        }
+        return hasValidImage;
+      });
       
-      return albums;
+      // Cache the results
+      await cacheSet(cacheKey, JSON.stringify(albumsWithImages), this.searchCacheTTL);
+      
+      return albumsWithImages;
     } catch (error) {
       console.error('Error getting top albums:', error);
       
@@ -447,11 +458,19 @@ export class LastFmService {
    */
   private mapLastFmAlbumToAlbum = (lastFmAlbum: LastFmAlbum): Album => {
     // Get the largest available image
-    const imageUrl = lastFmAlbum.image?.find(img => img.size === 'extralarge')?.['#text'] ||
-                     lastFmAlbum.image?.find(img => img.size === 'large')?.['#text'] ||
-                     lastFmAlbum.image?.find(img => img.size === 'medium')?.['#text'] ||
-                     lastFmAlbum.image?.[0]?.['#text'] ||
-                     '';
+    let imageUrl = lastFmAlbum.image?.find(img => img.size === 'extralarge')?.['#text'] ||
+                   lastFmAlbum.image?.find(img => img.size === 'large')?.['#text'] ||
+                   lastFmAlbum.image?.find(img => img.size === 'medium')?.['#text'] ||
+                   lastFmAlbum.image?.[0]?.['#text'] ||
+                   '';
+
+    // Clean up image URL
+    if (imageUrl) {
+      // Get higher resolution if possible
+      imageUrl = imageUrl.replace('/300x300/', '/640x640/');
+      // Trim whitespace
+      imageUrl = imageUrl.trim();
+    }
 
     // Create a unique ID for the album
     const albumId = lastFmAlbum.mbid || `${lastFmAlbum.artist}|${lastFmAlbum.name}`;
@@ -471,7 +490,7 @@ export class LastFmService {
       name: lastFmAlbum.name,
       artist: lastFmAlbum.artist,
       releaseDate,
-      imageUrl: imageUrl.replace('/300x300/', '/640x640/'), // Get higher resolution if possible
+      imageUrl,
       spotifyUrl: lastFmAlbum.url || `https://www.last.fm/music/${encodeURIComponent(lastFmAlbum.artist)}/${encodeURIComponent(lastFmAlbum.name)}`,
       createdAt: new Date(),
       updatedAt: new Date(),
