@@ -138,7 +138,18 @@ const Home = () => {
                     <Grid container spacing={3}>
                         {popularReviews.map((item) => (
                             <Grid key={item.id} size={{ xs: 12, md: 4 }}>
-                                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                <Card 
+                                    sx={{ 
+                                        height: '100%', 
+                                        display: 'flex', 
+                                        flexDirection: 'column',
+                                        cursor: 'pointer',
+                                        '&:hover': {
+                                            boxShadow: 2
+                                        }
+                                    }}
+                                    onClick={() => navigate(`/review/${item.id}`)}
+                                >
                                     <Box sx={{ display: 'flex', p: 2 }}>
                                         <CardMedia
                                             component="img"

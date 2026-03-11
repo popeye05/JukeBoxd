@@ -17,6 +17,7 @@ import './App.css';
 
 import Home from './pages/Home';
 import DiscoverUsersPage from './pages/DiscoverUsersPage';
+import ReviewPage from './pages/ReviewPage';
 
 const Search = () => <AlbumSearchPage />;
 
@@ -104,6 +105,10 @@ function App() {
                 <Route
                   path="/profile/:userId"
                   element={<UserProfilePage />}
+                />
+                <Route
+                  path="/review/:reviewId"
+                  element={<ReviewPage />}
                 />
                 <Route
                   path="/feed"
