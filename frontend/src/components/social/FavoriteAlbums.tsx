@@ -156,7 +156,10 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
 
   return (
     <Card>
-      <CardContent sx={{ p: { xs: 1, sm: 2 } }}>
+      <CardContent sx={{ 
+        p: { xs: 1, sm: 2 },
+        '&:last-child': { pb: { xs: 1, sm: 2 } }
+      }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>Top Favorite Albums</Typography>
           {isOwnProfile && (
@@ -194,18 +197,20 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
             <Box sx={{ 
               display: 'grid',
               gridTemplateColumns: {
-                xs: 'repeat(3, 1fr)',
+                xs: 'repeat(3, minmax(0, 1fr))',
                 sm: 'repeat(4, 1fr)',
                 md: 'repeat(5, 1fr)',
               },
               gap: { xs: 0.5, sm: 2 },
-              width: '100%'
+              width: '100%',
+              overflow: 'hidden'
             }}>
               {displayedFavorites.map((favorite, index) => (
-              <Box key={favorite.id}>
+              <Box key={favorite.id} sx={{ minWidth: 0 }}>
                 <Card variant="outlined" sx={{ 
                   position: 'relative',
-                  borderWidth: { xs: '0.5px', sm: '1px' }
+                  borderWidth: { xs: '0.5px', sm: '1px' },
+                  width: '100%'
                 }}>
                   <Box sx={{ position: 'relative', paddingTop: '100%' }}>
                     <CardMedia
