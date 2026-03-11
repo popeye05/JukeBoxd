@@ -13,6 +13,7 @@ import {
   Button
 } from '@mui/material';
 import { CalendarToday, Star, RateReview } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { socialApi } from '../../services/socialApi';
 import { reviewService } from '../../services/reviewService';
@@ -36,6 +37,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
   compact = false
 }) => {
   const { user: currentUser } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<UserProfileWithStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -142,7 +144,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 variant="contained"
                 size="small"
                 fullWidth
-                onClick={() => window.location.href = `/profile/${userId}`}
+                onClick={() => navigate(`/profile/${userId}`)}
               >
                 View Profile
               </Button>
