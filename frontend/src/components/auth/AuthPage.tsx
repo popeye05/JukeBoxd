@@ -16,9 +16,17 @@ const AuthPage: React.FC = () => {
   const switchToLogin = () => setIsLogin(true);
 
   const handleSkip = () => {
-    // Simply go back to the previous page
-    // Since profiles are public, this will work fine
-    navigate(-1);
+    // Get the 'from' location if it exists
+    const from = (location.state as any)?.from;
+    
+    // If we came from a specific page and it's not /auth or /profile (protected)
+    if (from?.pathname && from.pathname !== '/auth' && from.pathname !== '/profile') {
+      // Go to that page
+      navigate(from.pathname, { replace: true });
+    } else {
+      // Otherwise go home
+      navigate('/', { replace: true });
+    }
   };
 
   return (
