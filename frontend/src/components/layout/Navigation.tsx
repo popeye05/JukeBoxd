@@ -240,7 +240,9 @@ const Navigation: React.FC = () => {
                   color: '#0A0A0A',
                   fontWeight: 700,
                   fontSize: '1rem'
-                }}>
+                }}
+                src={user.avatarUrl || undefined}
+                >
                   {user.username.charAt(0).toUpperCase()}
                 </Avatar>
               </IconButton>
