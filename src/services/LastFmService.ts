@@ -417,7 +417,7 @@ export class LastFmService {
     await this.checkRateLimit();
 
     try {
-      console.log('🎵 Fetching top albums from Last.fm chart.getTopAlbums...');
+      console.log('🎵 Fetching top albums from Last.fm chart.gettopalbumsmethod...');
       const response: AxiosResponse<{ albums: { album: LastFmAlbum[] } }> = await this.client.get('', {
         params: {
           method: 'chart.gettopalbumsmethod',
@@ -445,7 +445,7 @@ export class LastFmService {
       console.error('   Response:', error.response?.data);
       
       // Instead of mock data, try using tag-based top albums as fallback
-      console.log('🎵 Trying fallback: tag.getTopAlbums with "rock" tag...');
+      console.log('🎵 Trying fallback: tag.gettopalbumsmethod with "rock" tag...');
       try {
         const fallbackResponse: AxiosResponse<{ albums: { album: LastFmAlbum[] } }> = await this.client.get('', {
           params: {
