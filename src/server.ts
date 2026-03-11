@@ -191,6 +191,30 @@ async function startServer() {
           UNIQUE(user_id, album_id)
         );`);
         
+        // Create review interactions tables
+        await query(`CREATE TABLE IF NOT EXISTS review_likes (
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+          review_id UUID REFERENCES reviews(id) ON DELETE CASCADE,
+          user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          UNIQUE(review_id, user_id)
+        );`);
+        
+        await query(`CREATE TABLE IF NOT EXISTS review_comments (
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+          review_id UUID REFERENCES reviews(id) ON DELETE CASCADE,
+          user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+          content TEXT NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );`);
+        
+        // Create indexes for better performance
+        await query(`CREATE INDEX IF NOT EXISTS idx_review_likes_review_id ON review_likes(review_id);`);
+        await query(`CREATE INDEX IF NOT EXISTS idx_review_likes_user_id ON review_likes(user_id);`);
+        await query(`CREATE INDEX IF NOT EXISTS idx_review_comments_review_id ON review_comments(review_id);`);
+        await query(`CREATE INDEX IF NOT EXISTS idx_review_comments_user_id ON review_comments(user_id);`);
+        
         console.log('✅ Database migrations completed');
       } catch (migrationError) {
         console.warn('⚠️ Migration warning (tables may already exist):', migrationError);

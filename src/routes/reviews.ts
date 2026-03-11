@@ -2,6 +2,8 @@ import { Router, Request, Response } from 'express';
 import { body, param, validationResult } from 'express-validator';
 import { ReviewService } from '@/services/ReviewService';
 import { AlbumModel } from '@/models/Album';
+import { ReviewLikeModel } from '@/models/ReviewLike';
+import { ReviewCommentModel } from '@/models/ReviewComment';
 import { authenticateToken, getCurrentUserId } from '@/middleware/auth';
 import { asyncHandler, createError } from '@/middleware/errorHandler';
 import { ApiResponse } from '@/types';
@@ -275,6 +277,229 @@ router.get('/recent', asyncHandler(async (req: Request, res: Response) => {
     };
 
     res.status(200).json(response);
+  } catch (error: any) {
+    throw error;
+  }
+}));
+
+/**
+ * GET /api/reviews/:reviewId
+ * Get single review with details (public route for sharing)
+ */
+router.get('/:reviewId', [
+  param('reviewId')
+    .trim()
+    .notEmpty()
+    .withMessage('Review ID is required')
+    .isUUID()
+    .withMessage('Invalid review ID format')
+], asyncHandler(async (req: Request, res: Response) => {
+  // Check validation results
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = createError(
+      `Validation failed: ${errors.array().map(e => e.msg).join(', ')}`,
+      400
+    );
+    throw error;
+  }
+
+  const { reviewId } = req.params;
+
+  try {
+    // Get review with full details
+    const review = await ReviewService.getReviewWithDetails(reviewId!);
+
+    if (!review) {
+      throw createError('Review not found', 404);
+    }
+
+    // Get like count and comment count
+    const likeCount = await ReviewLikeModel.getLikeCount(reviewId!);
+    const commentCount = await ReviewCommentModel.getCommentCount(reviewId!);
+    
+    // Check if current user has liked (if authenticated)
+    let hasLiked = false;
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+      try {
+        const userId = getCurrentUserId(req);
+        hasLiked = await ReviewLikeModel.hasUserLiked(reviewId!, userId);
+      } catch (error) {
+        // User not authenticated, hasLiked remains false
+      }
+    }
+
+    const response: ApiResponse = {
+      success: true,
+      data: {
+        review,
+        likeCount,
+        commentCount,
+        hasLiked
+      },
+      timestamp: new Date().toISOString()
+    };
+
+    res.status(200).json(response);
+  } catch (error: any) {
+    throw error;
+  }
+}));
+
+/**
+ * POST /api/reviews/:reviewId/like
+ * Like/unlike a review
+ */
+router.post('/:reviewId/like', [
+  authenticateToken,
+  param('reviewId')
+    .trim()
+    .notEmpty()
+    .withMessage('Review ID is required')
+    .isUUID()
+    .withMessage('Invalid review ID format')
+], asyncHandler(async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = createError(
+      `Validation failed: ${errors.array().map(e => e.msg).join(', ')}`,
+      400
+    );
+    throw error;
+  }
+
+  const { reviewId } = req.params;
+  const userId = getCurrentUserId(req);
+
+  try {
+    // Check if review exists
+    const review = await ReviewService.getReviewById(reviewId!);
+    if (!review) {
+      throw createError('Review not found', 404);
+    }
+
+    // Check if user has already liked
+    const hasLiked = await ReviewLikeModel.hasUserLiked(reviewId!, userId);
+
+    if (hasLiked) {
+      // Unlike
+      await ReviewLikeModel.delete(reviewId!, userId);
+    } else {
+      // Like
+      await ReviewLikeModel.create(reviewId!, userId);
+    }
+
+    const likeCount = await ReviewLikeModel.getLikeCount(reviewId!);
+
+    const response: ApiResponse = {
+      success: true,
+      data: {
+        liked: !hasLiked,
+        likeCount,
+        message: hasLiked ? 'Review unliked' : 'Review liked'
+      },
+      timestamp: new Date().toISOString()
+    };
+
+    res.status(200).json(response);
+  } catch (error: any) {
+    throw error;
+  }
+}));
+
+/**
+ * GET /api/reviews/:reviewId/comments
+ * Get comments for a review
+ */
+router.get('/:reviewId/comments', [
+  param('reviewId')
+    .trim()
+    .notEmpty()
+    .withMessage('Review ID is required')
+    .isUUID()
+    .withMessage('Invalid review ID format')
+], asyncHandler(async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = createError(
+      `Validation failed: ${errors.array().map(e => e.msg).join(', ')}`,
+      400
+    );
+    throw error;
+  }
+
+  const { reviewId } = req.params;
+
+  try {
+    const comments = await ReviewCommentModel.findByReviewId(reviewId!);
+
+    const response: ApiResponse = {
+      success: true,
+      data: {
+        comments,
+        total: comments.length
+      },
+      timestamp: new Date().toISOString()
+    };
+
+    res.status(200).json(response);
+  } catch (error: any) {
+    throw error;
+  }
+}));
+
+/**
+ * POST /api/reviews/:reviewId/comments
+ * Add a comment to a review
+ */
+router.post('/:reviewId/comments', [
+  authenticateToken,
+  param('reviewId')
+    .trim()
+    .notEmpty()
+    .withMessage('Review ID is required')
+    .isUUID()
+    .withMessage('Invalid review ID format'),
+  body('content')
+    .trim()
+    .notEmpty()
+    .withMessage('Comment content is required')
+    .isLength({ min: 1, max: 1000 })
+    .withMessage('Comment must be between 1 and 1000 characters')
+], asyncHandler(async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = createError(
+      `Validation failed: ${errors.array().map(e => e.msg).join(', ')}`,
+      400
+    );
+    throw error;
+  }
+
+  const { reviewId } = req.params;
+  const { content } = req.body;
+  const userId = getCurrentUserId(req);
+
+  try {
+    // Check if review exists
+    const review = await ReviewService.getReviewById(reviewId!);
+    if (!review) {
+      throw createError('Review not found', 404);
+    }
+
+    const comment = await ReviewCommentModel.create(reviewId!, userId, content);
+
+    const response: ApiResponse = {
+      success: true,
+      data: {
+        comment,
+        message: 'Comment added successfully'
+      },
+      timestamp: new Date().toISOString()
+    };
+
+    res.status(201).json(response);
   } catch (error: any) {
     throw error;
   }

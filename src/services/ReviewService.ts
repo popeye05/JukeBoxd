@@ -187,3 +187,21 @@ export class ReviewService {
     return { isValid: true };
   }
 }
+  /**
+   * Get review by ID with full details (user and album info)
+   */
+  static async getReviewWithDetails(id: string): Promise<ReviewWithDetails | null> {
+    // First get the basic review
+    const review = await ReviewModel.findById(id);
+    if (!review) {
+      return null;
+    }
+
+    // Get the review with details using the existing method
+    const reviewsWithDetails = await ReviewModel.findByUserWithDetails(review.userId);
+    
+    // Find the specific review in the results
+    const reviewWithDetails = reviewsWithDetails.find(r => r.id === id);
+    
+    return reviewWithDetails || null;
+  }
