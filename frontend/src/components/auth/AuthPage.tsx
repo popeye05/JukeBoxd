@@ -18,9 +18,18 @@ const AuthPage: React.FC = () => {
   // Store the 'from' location in sessionStorage when component mounts
   useEffect(() => {
     const from = (location.state as any)?.from;
+    console.log('=== AUTH PAGE MOUNT ===');
+    console.log('Location state:', location.state);
+    console.log('From object:', from);
+    console.log('From pathname:', from?.pathname);
+    
     if (from?.pathname) {
+      console.log('Storing in sessionStorage:', from.pathname);
       sessionStorage.setItem('authReturnPath', from.pathname);
+    } else {
+      console.log('No pathname to store');
     }
+    console.log('======================');
   }, [location.state]);
 
   const handleSkip = () => {
