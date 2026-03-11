@@ -417,28 +417,57 @@ export class LastFmService {
     await this.checkRateLimit();
 
     try {
+      console.log('🎵 Fetching top albums from Last.fm chart.getTopAlbums...');
       const response: AxiosResponse<{ albums: { album: LastFmAlbum[] } }> = await this.client.get('', {
         params: {
-          method: 'chart.getTopAlbums',
+          method: 'chart.gettopalbumsmethod',
           api_key: this.apiKey,
           format: 'json',
-          limit: Math.min(limit, 50),
+          limit: Math.min(limit * 2, 50), // Request more to ensure we get enough with images
         },
       });
 
+      console.log('🎵 Last.fm response received:', response.data.albums?.album?.length || 0, 'albums');
+
       const albums = response.data.albums?.album?.map(this.mapLastFmAlbumToAlbum) || [];
       
+      // Filter out albums without valid images and take only what we need
+      const validAlbums = albums.filter(album => album.imageUrl && album.imageUrl.trim() !== '').slice(0, limit);
+      
+      console.log('🎵 Filtered to', validAlbums.length, 'albums with valid images');
+      
       // Cache the results
-      await cacheSet(cacheKey, JSON.stringify(albums), this.searchCacheTTL);
+      await cacheSet(cacheKey, JSON.stringify(validAlbums), this.searchCacheTTL);
       
-      return albums;
-    } catch (error) {
-      console.error('Error getting top albums:', error);
+      return validAlbums;
+    } catch (error: any) {
+      console.error('❌ Error getting top albums from Last.fm:', error.message);
+      console.error('   Response:', error.response?.data);
       
-      // Fallback to mock data on error
-      console.log('🎵 Falling back to demo mode due to API error');
-      const shuffled = [...MOCK_ALBUMS].sort(() => Math.random() - 0.5);
-      return shuffled.slice(0, limit);
+      // Instead of mock data, try using tag-based top albums as fallback
+      console.log('🎵 Trying fallback: tag.getTopAlbums with "rock" tag...');
+      try {
+        const fallbackResponse: AxiosResponse<{ albums: { album: LastFmAlbum[] } }> = await this.client.get('', {
+          params: {
+            method: 'tag.gettopalbumsmethod',
+            tag: 'rock',
+            api_key: this.apiKey,
+            format: 'json',
+            limit: Math.min(limit * 2, 50),
+          },
+        });
+
+        const albums = fallbackResponse.data.albums?.album?.map(this.mapLastFmAlbumToAlbum) || [];
+        const validAlbums = albums.filter(album => album.imageUrl && album.imageUrl.trim() !== '').slice(0, limit);
+        
+        console.log('🎵 Fallback successful:', validAlbums.length, 'albums');
+        await cacheSet(cacheKey, JSON.stringify(validAlbums), this.searchCacheTTL);
+        
+        return validAlbums;
+      } catch (fallbackError) {
+        console.error('❌ Fallback also failed, returning empty array');
+        return [];
+      }
     }
   }
 
