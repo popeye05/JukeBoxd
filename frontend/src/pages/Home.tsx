@@ -154,7 +154,7 @@ const Home = () => {
                                         <CardMedia
                                             component="img"
                                             sx={{ width: 80, height: 80, borderRadius: 1 }}
-                                            image={item.album.imageUrl || item.album.image_url || 'https://via.placeholder.com/150'}
+                                            image={item.album.imageUrl || item.album.image_url || '/placeholder-album.svg'}
                                             alt={item.album.name}
                                         />
                                         <Box sx={{ ml: 2 }}>

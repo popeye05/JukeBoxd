@@ -131,6 +131,9 @@ async function startServer() {
           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );`);
         
+        // Add cover_photo_url column if it doesn't exist
+        await query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS cover_photo_url TEXT;`);
+        
         await query(`CREATE TABLE IF NOT EXISTS albums (
           id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
           spotify_id VARCHAR(255) UNIQUE NOT NULL,

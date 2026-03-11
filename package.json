@@ -18,6 +18,7 @@
     "test:integration:property": "node scripts/run-integration-tests.js --property",
     "test:integration:coverage": "node scripts/run-integration-tests.js --coverage",
     "db:migrate": "node dist/scripts/migrate.js",
+    "db:migrate:cover": "node migrate-cover-photo.js",
     "db:seed": "node dist/scripts/seed.js",
     "postinstall": "cd frontend && npm install"
   },

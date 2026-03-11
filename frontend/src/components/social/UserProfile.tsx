@@ -341,7 +341,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
                           <CardMedia
                             component="img"
                             sx={{ width: 80, objectFit: 'cover' }}
-                            image={review.album.imageUrl || 'https://via.placeholder.com/150'}
+                            image={review.album.imageUrl || '/placeholder-album.svg'}
                             alt={review.album.name}
                           />
                         )}
@@ -403,7 +403,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
                           {rating.album && (
                             <CardMedia
                               component="img"
-                              image={rating.album.imageUrl || 'https://via.placeholder.com/150'}
+                              image={rating.album.imageUrl || '/placeholder-album.svg'}
                               alt={rating.album.name}
                               sx={{
                                 position: 'absolute',
