@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { body, param, validationResult } from 'express-validator';
 import { ReviewService } from '@/services/ReviewService';
+import { AuthService } from '@/services/AuthService';
 import { AlbumModel } from '@/models/Album';
 import { ReviewLikeModel } from '@/models/ReviewLike';
 import { ReviewCommentModel } from '@/models/ReviewComment';
@@ -323,10 +324,16 @@ router.get('/:reviewId', [
     const authHeader = req.headers.authorization;
     if (authHeader) {
       try {
-        const userId = getCurrentUserId(req);
-        hasLiked = await ReviewLikeModel.hasUserLiked(reviewId!, userId);
+        const token = authHeader.split(' ')[1];
+        if (token) {
+          // Validate token and get user
+          const userProfile = await AuthService.validateToken(token);
+          if (userProfile) {
+            hasLiked = await ReviewLikeModel.hasUserLiked(reviewId!, userProfile.id);
+          }
+        }
       } catch (error) {
-        // User not authenticated, hasLiked remains false
+        // User not authenticated or invalid token, hasLiked remains false
       }
     }
 

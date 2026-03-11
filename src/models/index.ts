@@ -4,3 +4,5 @@ export { RatingModel } from './Rating';
 export { ReviewModel } from './Review';
 export { FollowModel } from './Follow';
 export { ActivityModel } from './Activity';
+export { ReviewLikeModel } from './ReviewLike';
+export { ReviewCommentModel } from './ReviewComment';
