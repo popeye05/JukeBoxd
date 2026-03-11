@@ -30,7 +30,7 @@
 
 ## 🚀 Live Demo
 
-**Try JukeBoxd now:(Railway Trial Ended)**
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit_JukeBoxd-FFD700?style=for-the-badge)](https://jukeboxd-8781.onrender.com/)
 
 ### Demo Features:
 - ✅ **Full User Registration** - Create your account
