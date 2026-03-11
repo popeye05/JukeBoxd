@@ -16,13 +16,14 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Search, Home, RssFeed, Person, Menu as MenuIcon } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Navigation: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -131,7 +132,7 @@ const Navigation: React.FC = () => {
                   </>
                 )}
                 {!user && (
-                  <ListItem onClick={() => { navigate('/auth'); setMobileMenuOpen(false); }} sx={{ cursor: 'pointer' }}>
+                  <ListItem onClick={() => { navigate('/auth', { state: { from: location } }); setMobileMenuOpen(false); }} sx={{ cursor: 'pointer' }}>
                     <ListItemText primary="Sign In" sx={{ color: '#FFD700' }} />
                   </ListItem>
                 )}
@@ -297,7 +298,7 @@ const Navigation: React.FC = () => {
           ) : (
             <Button
               variant="contained"
-              onClick={() => navigate('/auth')}
+              onClick={() => navigate('/auth', { state: { from: location } })}
               sx={{
                 borderRadius: 2,
                 px: 3,
