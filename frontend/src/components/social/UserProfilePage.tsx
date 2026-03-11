@@ -6,7 +6,6 @@ import {
   Grid,
   Alert,
   Button,
-  IconButton,
   Snackbar
 } from '@mui/material';
 import { ArrowBack, Share } from '@mui/icons-material';
