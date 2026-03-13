@@ -58,6 +58,7 @@ export interface Review {
 export interface ReviewWithDetails extends Review {
   user?: User;
   album?: Album;
+  rating?: number | null; // Optional rating from the same user for the same album
 }
 
 // Follow types

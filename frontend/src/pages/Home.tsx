@@ -165,18 +165,26 @@ const Home = () => {
                                                 {item.album.artist}
                                             </Typography>
                                             <Box display="flex" alignItems="center">
-                                                {[...Array(5)].map((_, i) => (
-                                                    <Star
-                                                        key={i}
-                                                        sx={{
-                                                            fontSize: 16,
-                                                            color: i < (item.rating || 0) ? 'primary.main' : 'action.disabled'
-                                                        }}
-                                                    />
-                                                ))}
-                                                <Typography variant="caption" sx={{ ml: 1, color: 'text.secondary' }}>
-                                                    {item.rating || 'No rating'}
-                                                </Typography>
+                                                {item.rating ? (
+                                                    <>
+                                                        {[...Array(5)].map((_, i) => (
+                                                            <Star
+                                                                key={i}
+                                                                sx={{
+                                                                    fontSize: 16,
+                                                                    color: i < item.rating ? 'primary.main' : 'action.disabled'
+                                                                }}
+                                                            />
+                                                        ))}
+                                                        <Typography variant="caption" sx={{ ml: 1, color: 'text.secondary' }}>
+                                                            {item.rating}/5
+                                                        </Typography>
+                                                    </>
+                                                ) : (
+                                                    <Typography variant="caption" color="text.secondary">
+                                                        No rating
+                                                    </Typography>
+                                                )}
                                             </Box>
                                         </Box>
                                     </Box>

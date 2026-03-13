@@ -262,18 +262,20 @@ export class ReviewModel {
   }
 
   /**
-   * Get recent reviews with album and user details
+   * Get recent reviews with album and user details, including ratings
    */
   static async findRecentWithDetails(limit: number = 10): Promise<ReviewWithDetails[]> {
     const result: QueryResult<any> = await query(
       `SELECT 
         r.id, r.user_id, r.album_id, r.content, r.created_at, r.updated_at,
-        u.id as user_id, u.username, u.email, u.created_at as user_created_at, u.updated_at as user_updated_at,
+        u.id as user_id, u.username, u.email, u.bio, u.avatar_url, u.display_name, u.created_at as user_created_at, u.updated_at as user_updated_at,
         a.id as album_id, a.spotify_id, a.name as album_name, a.artist, a.release_date, a.image_url, a.spotify_url, 
-        a.created_at as album_created_at, a.updated_at as album_updated_at
+        a.created_at as album_created_at, a.updated_at as album_updated_at,
+        rt.rating
        FROM reviews r
        JOIN users u ON r.user_id = u.id
        JOIN albums a ON r.album_id = a.id
+       LEFT JOIN ratings rt ON r.user_id = rt.user_id AND r.album_id = rt.album_id
        ORDER BY r.created_at DESC
        LIMIT $1`,
       [limit]
@@ -284,12 +286,16 @@ export class ReviewModel {
       userId: row.user_id,
       albumId: row.album_id,
       content: row.content,
+      rating: row.rating || null,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at),
       user: {
         id: row.user_id,
         username: row.username,
         email: row.email,
+        bio: row.bio,
+        avatarUrl: row.avatar_url,
+        displayName: row.display_name,
         createdAt: new Date(row.user_created_at),
         updatedAt: new Date(row.user_updated_at)
       },
