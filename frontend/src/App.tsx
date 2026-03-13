@@ -10,6 +10,7 @@ import { AlbumSearchPage, AlbumDetail } from './components/albums';
 import { UserProfilePage } from './components/social';
 import { ActivityFeedPage } from './components/feed';
 import { ErrorBoundary } from './components/common';
+import ConnectionStatus from './components/common/ConnectionStatus';
 import { theme } from './theme';
 import './App.css';
 
@@ -81,6 +82,7 @@ function App() {
         <CssBaseline />
         <AuthProvider>
           <Router>
+            <ConnectionStatus />
             <Navigation />
 
             <Container maxWidth="lg">

@@ -74,20 +74,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Verify token with server (with timeout handling)
       const validateToken = async () => {
         try {
-          const response = await api.get('/auth/me');
+          // Create a shorter timeout for token validation
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+          
+          const response = await api.get('/auth/me', {
+            signal: controller.signal
+          });
+          
+          clearTimeout(timeoutId);
           setUser(response.data.data.user);
         } catch (error: any) {
           console.error('Token validation failed:', error);
           
-          // Only remove token if it's actually invalid (not network error)
-          if (error.response?.status === 401 || error.response?.status === 403) {
+          // Handle different types of errors
+          if (error.name === 'AbortError' || error.code === 'ECONNABORTED') {
+            // Timeout error - keep token but show user they might be offline
+            console.log('Token validation timed out, keeping token for offline use');
+          } else if (error.response?.status === 401 || error.response?.status === 403) {
+            // Invalid token - remove it
             removeToken();
             setTokenState(null);
-          } else if (error.code === 'NETWORK_ERROR') {
-            // Keep token for network errors - user might be offline
+          } else if (error.code === 'NETWORK_ERROR' || !error.response) {
+            // Network error - keep token for offline use
             console.log('Network error during token validation, keeping token');
           } else {
-            // For other errors, remove token
+            // Other server errors - remove token
             removeToken();
             setTokenState(null);
           }

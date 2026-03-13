@@ -15,7 +15,7 @@ const api = axios.create({
       ? '/api'  // In production, API is served from same domain
       : 'http://localhost:3001/api'  // In development, backend runs on port 3001
   ),
-  timeout: 30000, // Increased to 30 seconds
+  timeout: 20000, // Reduced to 20 seconds for faster feedback
   headers: {
     'Content-Type': 'application/json',
   },
