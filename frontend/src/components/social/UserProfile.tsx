@@ -264,35 +264,74 @@ const UserProfile: React.FC<UserProfileProps> = ({
               />
             </Box>
 
-            {/* Stats Section - Ratings/Reviews Counts (Restored) */}
-            <Grid container spacing={2} sx={{ mt: 1 }}>
-              <Grid size={{ xs: 6, md: 3 }}>
-                <Box textAlign="center">
-                  <Typography variant="h4" color="primary">
-                    {profile.reviewsCount || 0}
+            {/* Stats Section - Ratings/Reviews Counts */}
+            <Box display="flex" justifyContent="center" gap={4} sx={{ mt: 2 }}>
+              <Box textAlign="center">
+                <Typography 
+                  variant="h4" 
+                  color="primary"
+                  sx={{ 
+                    fontWeight: 700,
+                    fontSize: { xs: '1.75rem', sm: '2rem' },
+                    lineHeight: 1.2
+                  }}
+                >
+                  {(profile.reviewsCount || 0).toLocaleString()}
+                </Typography>
+                <Box display="flex" alignItems="center" justifyContent="center" gap={0.5} sx={{ mt: 0.5 }}>
+                  <RateReview color="action" fontSize="small" />
+                  <Typography 
+                    variant="body2" 
+                    color="text.secondary"
+                    sx={{ 
+                      fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                      fontWeight: 500,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px'
+                    }}
+                  >
+                    Reviews
                   </Typography>
-                  <Box display="flex" alignItems="center" justifyContent="center" gap={0.5}>
-                    <RateReview color="action" fontSize="small" />
-                    <Typography variant="body2" color="text.secondary">
-                      Reviews
-                    </Typography>
-                  </Box>
                 </Box>
-              </Grid>
-              <Grid size={{ xs: 6, md: 3 }}>
-                <Box textAlign="center">
-                  <Typography variant="h4" color="primary">
-                    {profile.ratingsCount || 0}
+              </Box>
+
+              <Box 
+                sx={{ 
+                  width: '1px', 
+                  bgcolor: 'divider', 
+                  alignSelf: 'stretch'
+                }} 
+              />
+
+              <Box textAlign="center">
+                <Typography 
+                  variant="h4" 
+                  color="primary"
+                  sx={{ 
+                    fontWeight: 700,
+                    fontSize: { xs: '1.75rem', sm: '2rem' },
+                    lineHeight: 1.2
+                  }}
+                >
+                  {(profile.ratingsCount || 0).toLocaleString()}
+                </Typography>
+                <Box display="flex" alignItems="center" justifyContent="center" gap={0.5} sx={{ mt: 0.5 }}>
+                  <Star color="action" fontSize="small" />
+                  <Typography 
+                    variant="body2" 
+                    color="text.secondary"
+                    sx={{ 
+                      fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                      fontWeight: 500,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px'
+                    }}
+                  >
+                    Ratings
                   </Typography>
-                  <Box display="flex" alignItems="center" justifyContent="center" gap={0.5}>
-                    <Star color="action" fontSize="small" />
-                    <Typography variant="body2" color="text.secondary">
-                      Ratings
-                    </Typography>
-                  </Box>
                 </Box>
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
           </Box>
         </CardContent>
       </Card>

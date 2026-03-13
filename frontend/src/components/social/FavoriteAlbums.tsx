@@ -184,9 +184,19 @@ const FavoriteAlbums: React.FC<FavoriteAlbumsProps> = ({ userId, isOwnProfile })
                 startIcon={<Add />}
                 onClick={() => setAddDialogOpen(true)}
                 sx={{ 
-                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
-                  px: { xs: 1, sm: 2 },
-                  py: { xs: 0.5, sm: 1 }
+                  fontSize: { xs: '0.7rem', sm: '0.8rem' },
+                  px: { xs: 1.5, sm: 2 },
+                  py: { xs: 0.5, sm: 0.75 },
+                  minWidth: 'auto',
+                  borderRadius: 2,
+                  textTransform: 'none',
+                  fontWeight: 500,
+                  '& .MuiButton-startIcon': {
+                    marginRight: { xs: 0.5, sm: 1 },
+                    '& > *:nth-of-type(1)': {
+                      fontSize: { xs: '1rem', sm: '1.1rem' }
+                    }
+                  }
                 }}
               >
                 Add Album

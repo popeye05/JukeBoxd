@@ -199,32 +199,91 @@ const SocialStats: React.FC<SocialStatsProps> = ({
 
   return (
     <>
-      <Box display="flex" gap={3}>
+      <Box display="flex" gap={4} justifyContent="center">
         <Button
           variant="text"
           onClick={handleFollowersClick}
-          sx={{ textTransform: 'none', p: 0 }}
+          sx={{ 
+            textTransform: 'none', 
+            p: 1,
+            borderRadius: 2,
+            '&:hover': {
+              backgroundColor: 'rgba(255, 215, 0, 0.08)'
+            }
+          }}
         >
           <Box textAlign="center">
-            <Typography variant="h6" color="primary">
-              {followersCount}
+            <Typography 
+              variant="h5" 
+              color="primary" 
+              sx={{ 
+                fontWeight: 700,
+                fontSize: { xs: '1.5rem', sm: '1.75rem' },
+                lineHeight: 1.2
+              }}
+            >
+              {followersCount.toLocaleString()}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{ 
+                fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                fontWeight: 500,
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                mt: 0.25
+              }}
+            >
               Followers
             </Typography>
           </Box>
         </Button>
 
+        <Box 
+          sx={{ 
+            width: '1px', 
+            bgcolor: 'divider', 
+            mx: 1,
+            alignSelf: 'stretch'
+          }} 
+        />
+
         <Button
           variant="text"
           onClick={handleFollowingClick}
-          sx={{ textTransform: 'none', p: 0 }}
+          sx={{ 
+            textTransform: 'none', 
+            p: 1,
+            borderRadius: 2,
+            '&:hover': {
+              backgroundColor: 'rgba(255, 215, 0, 0.08)'
+            }
+          }}
         >
           <Box textAlign="center">
-            <Typography variant="h6" color="primary">
-              {followingCount}
+            <Typography 
+              variant="h5" 
+              color="primary" 
+              sx={{ 
+                fontWeight: 700,
+                fontSize: { xs: '1.5rem', sm: '1.75rem' },
+                lineHeight: 1.2
+              }}
+            >
+              {followingCount.toLocaleString()}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{ 
+                fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                fontWeight: 500,
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                mt: 0.25
+              }}
+            >
               Following
             </Typography>
           </Box>
