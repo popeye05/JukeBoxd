@@ -55,7 +55,10 @@ export const ReviewList: React.FC<ReviewListProps> = ({ reviews, currentUserId }
         {otherUsersReviews.map((review, index) => (
           <Box key={review.id}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
-              <Avatar sx={{ bgcolor: 'primary.main' }}>
+              <Avatar 
+                sx={{ bgcolor: 'primary.main' }}
+                src={review.user?.avatarUrl || undefined}
+              >
                 {review.user?.username?.charAt(0).toUpperCase() || 'U'}
               </Avatar>
               

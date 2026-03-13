@@ -95,7 +95,10 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = ({ activity }) 
       <CardContent>
         <Box display="flex" gap={2}>
           {/* User Avatar */}
-          <Avatar sx={{ width: 40, height: 40 }}>
+          <Avatar 
+            sx={{ width: 40, height: 40 }}
+            src={activity.user?.avatarUrl || undefined}
+          >
             {activity.user?.username?.charAt(0).toUpperCase() || 'U'}
           </Avatar>
 

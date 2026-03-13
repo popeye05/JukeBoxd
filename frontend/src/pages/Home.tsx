@@ -183,7 +183,10 @@ const Home = () => {
                                             "{item.content}"
                                         </Typography>
                                         <Box display="flex" alignItems="center">
-                                            <Avatar sx={{ width: 24, height: 24, mr: 1, fontSize: '0.8rem' }}>
+                                            <Avatar 
+                                                sx={{ width: 24, height: 24, mr: 1, fontSize: '0.8rem' }}
+                                                src={item.user.avatarUrl || undefined}
+                                            >
                                                 {item.user.username.charAt(0).toUpperCase()}
                                             </Avatar>
                                             <Typography variant="caption" color="text.secondary">

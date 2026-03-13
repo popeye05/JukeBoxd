@@ -117,7 +117,10 @@ const UserListDialog: React.FC<UserListDialogProps> = ({
                 }
               >
                 <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: 'primary.main' }}>
+                  <Avatar 
+                    sx={{ bgcolor: 'primary.main' }}
+                    src={user.avatarUrl || undefined}
+                  >
                     {user.username.charAt(0).toUpperCase()}
                   </Avatar>
                 </ListItemAvatar>
