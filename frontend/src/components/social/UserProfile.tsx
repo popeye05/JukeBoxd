@@ -129,7 +129,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
         <CardContent>
           <Box display="flex" flexDirection="column" gap={2}>
             <Box display="flex" alignItems="center" gap={2}>
-              <Avatar sx={{ bgcolor: 'primary.main', src: profile.avatarUrl }}>
+              <Avatar sx={{ bgcolor: 'primary.main' }} src={profile.avatarUrl || undefined}>
                 {profile.displayName?.charAt(0).toUpperCase() || profile.username.charAt(0).toUpperCase()}
               </Avatar>
               <Box flex={1}>
