@@ -71,20 +71,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Always try to validate the token, regardless of client-side expiry check
       setTokenState(storedToken);
       
-      // Verify token with server
-      api.get('/auth/me')
-        .then(response => {
+      // Verify token with server (with timeout handling)
+      const validateToken = async () => {
+        try {
+          const response = await api.get('/auth/me');
           setUser(response.data.data.user);
-        })
-        .catch((error) => {
+        } catch (error: any) {
           console.error('Token validation failed:', error);
-          // Token is invalid, remove it
-          removeToken();
-          setTokenState(null);
-        })
-        .finally(() => {
+          
+          // Only remove token if it's actually invalid (not network error)
+          if (error.response?.status === 401 || error.response?.status === 403) {
+            removeToken();
+            setTokenState(null);
+          } else if (error.code === 'NETWORK_ERROR') {
+            // Keep token for network errors - user might be offline
+            console.log('Network error during token validation, keeping token');
+          } else {
+            // For other errors, remove token
+            removeToken();
+            setTokenState(null);
+          }
+        } finally {
           setLoading(false);
-        });
+        }
+      };
+
+      validateToken();
     } else {
       setLoading(false);
     }
@@ -98,8 +110,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setToken(authData.token);
       setTokenState(authData.token);
       setUser(authData.user);
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      // Provide more specific error messages
+      if (error.code === 'NETWORK_ERROR') {
+        throw new Error('Network connection failed. Please check your internet connection and try again.');
+      } else if (error.response?.status === 401) {
+        throw new Error('Invalid username/email or password.');
+      } else if (error.response?.status >= 500) {
+        throw new Error('Server is temporarily unavailable. Please try again in a few moments.');
+      } else {
+        throw new Error(error.response?.data?.error?.message || 'Login failed. Please try again.');
+      }
     }
   };
 

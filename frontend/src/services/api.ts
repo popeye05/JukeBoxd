@@ -1,6 +1,13 @@
 import axios from 'axios';
 import { getToken, removeToken } from '../utils/tokenManager';
 
+// Retry configuration
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 1000; // 1 second
+
+// Helper function to delay execution
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 // Create axios instance with base configuration
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || (
@@ -8,7 +15,7 @@ const api = axios.create({
       ? '/api'  // In production, API is served from same domain
       : 'http://localhost:3001/api'  // In development, backend runs on port 3001
   ),
-  timeout: 10000,
+  timeout: 30000, // Increased to 30 seconds
   headers: {
     'Content-Type': 'application/json',
   },
@@ -33,9 +40,20 @@ api.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
-    // Handle network errors
-    if (!error.response) {
+  async (error) => {
+    const originalRequest = error.config;
+
+    // Handle network errors with retry logic
+    if (!error.response && !originalRequest._retry) {
+      originalRequest._retry = true;
+      originalRequest._retryCount = (originalRequest._retryCount || 0) + 1;
+
+      if (originalRequest._retryCount <= MAX_RETRIES) {
+        console.log(`Retrying request (${originalRequest._retryCount}/${MAX_RETRIES})...`);
+        await delay(RETRY_DELAY * originalRequest._retryCount);
+        return api(originalRequest);
+      }
+
       error.code = 'NETWORK_ERROR';
       error.message = 'Network error. Please check your connection and try again.';
     }
@@ -64,7 +82,17 @@ api.interceptors.response.use(
       // Handle service unavailable (e.g., Last.fm API down)
       error.message = 'Service temporarily unavailable. Please try again later.';
     } else if (error.response?.status >= 500) {
-      // Handle server errors
+      // Handle server errors with retry for 502/503/504
+      if ([502, 503, 504].includes(error.response.status) && !originalRequest._retry) {
+        originalRequest._retry = true;
+        originalRequest._retryCount = (originalRequest._retryCount || 0) + 1;
+
+        if (originalRequest._retryCount <= MAX_RETRIES) {
+          console.log(`Retrying server error (${originalRequest._retryCount}/${MAX_RETRIES})...`);
+          await delay(RETRY_DELAY * originalRequest._retryCount);
+          return api(originalRequest);
+        }
+      }
       error.message = 'Server error. Please try again later.';
     }
 

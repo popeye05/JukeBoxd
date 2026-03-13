@@ -9,8 +9,13 @@ import {
   Alert,
   CircularProgress,
   Link,
+  Chip,
+  IconButton,
+  Tooltip
 } from '@mui/material';
+import { Wifi, WifiOff, Refresh } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
+import { testConnection } from '../../utils/connectionTest';
 
 interface LoginFormProps {
   onSwitchToRegister?: () => void;
@@ -21,7 +26,35 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState<{
+    tested: boolean;
+    success: boolean;
+    latency?: number;
+    error?: string;
+  }>({ tested: false, success: false });
+  const [testingConnection, setTestingConnection] = useState(false);
   const { login } = useAuth();
+
+  const handleConnectionTest = async () => {
+    setTestingConnection(true);
+    try {
+      const result = await testConnection();
+      setConnectionStatus({
+        tested: true,
+        success: result.success,
+        latency: result.latency,
+        error: result.error
+      });
+    } catch (err: any) {
+      setConnectionStatus({
+        tested: true,
+        success: false,
+        error: err.message
+      });
+    } finally {
+      setTestingConnection(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,6 +88,57 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
         <Typography variant="h4" component="h1" gutterBottom align="center">
           Sign In
         </Typography>
+
+        {/* Connection Status */}
+        <Box display="flex" justifyContent="center" alignItems="center" gap={1} mb={2}>
+          <Chip
+            icon={
+              testingConnection ? (
+                <CircularProgress size={16} />
+              ) : connectionStatus.success ? (
+                <Wifi />
+              ) : connectionStatus.tested ? (
+                <WifiOff />
+              ) : (
+                <Wifi />
+              )
+            }
+            label={
+              testingConnection
+                ? 'Testing...'
+                : connectionStatus.tested
+                ? connectionStatus.success
+                  ? `Connected ${connectionStatus.latency ? `(${connectionStatus.latency}ms)` : ''}`
+                  : 'Connection Failed'
+                : 'Connection Status'
+            }
+            color={
+              connectionStatus.tested
+                ? connectionStatus.success
+                  ? 'success'
+                  : 'error'
+                : 'default'
+            }
+            size="small"
+          />
+          <Tooltip title="Test connection to server">
+            <IconButton
+              size="small"
+              onClick={handleConnectionTest}
+              disabled={testingConnection}
+            >
+              <Refresh />
+            </IconButton>
+          </Tooltip>
+        </Box>
+
+        {connectionStatus.tested && !connectionStatus.success && (
+          <Alert severity="warning" sx={{ mb: 2 }}>
+            Connection issue: {connectionStatus.error}
+            <br />
+            <small>Try refreshing the page or check your internet connection.</small>
+          </Alert>
+        )}
 
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
