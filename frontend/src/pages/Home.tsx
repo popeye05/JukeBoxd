@@ -170,10 +170,13 @@ const Home = () => {
                                                         key={i}
                                                         sx={{
                                                             fontSize: 16,
-                                                            color: 'primary.main' // Simplified rating for now
+                                                            color: i < (item.rating || 0) ? 'primary.main' : 'action.disabled'
                                                         }}
                                                     />
                                                 ))}
+                                                <Typography variant="caption" sx={{ ml: 1, color: 'text.secondary' }}>
+                                                    {item.rating || 'No rating'}
+                                                </Typography>
                                             </Box>
                                         </Box>
                                     </Box>
