@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, AuthToken } from '../types';
 import api from '../services/api';
-import { setToken, getToken, removeToken, isTokenValid } from '../utils/tokenManager';
+import { setToken, getToken, removeToken, isTokenValid, shouldRefreshToken } from '../utils/tokenManager';
 
 interface AuthContextType {
   user: User | null;
@@ -32,12 +32,46 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setTokenState] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Auto-refresh token when it's about to expire
+  useEffect(() => {
+    if (!token) return;
+
+    const checkTokenExpiry = () => {
+      const storedToken = getToken();
+      if (storedToken && shouldRefreshToken(storedToken, 60)) { // Refresh 1 hour before expiry
+        // Refresh token
+        api.post('/auth/refresh')
+          .then(response => {
+            const authData: AuthToken = response.data.data;
+            setToken(authData.token);
+            setTokenState(authData.token);
+            setUser(authData.user);
+          })
+          .catch((error) => {
+            console.error('Token refresh failed:', error);
+            // If refresh fails, user will need to login again
+            logout();
+          });
+      }
+    };
+
+    // Check token expiry every 30 minutes
+    const interval = setInterval(checkTokenExpiry, 30 * 60 * 1000);
+    
+    // Also check immediately
+    checkTokenExpiry();
+
+    return () => clearInterval(interval);
+  }, [token]);
+
   useEffect(() => {
     // Check for existing token on app load
     const storedToken = getToken();
-    if (storedToken && isTokenValid()) {
+    if (storedToken) {
+      // Always try to validate the token, regardless of client-side expiry check
       setTokenState(storedToken);
-      // Verify token and get user data
+      
+      // Verify token with server
       api.get('/auth/me')
         .then(response => {
           setUser(response.data.data.user);
@@ -52,10 +86,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setLoading(false);
         });
     } else {
-      // Remove invalid token
-      if (storedToken) {
-        removeToken();
-      }
       setLoading(false);
     }
   }, []);

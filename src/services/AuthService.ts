@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export class AuthService {
   private static readonly JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key';
-  private static readonly JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
+  private static readonly JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '30d'; // Extended to 30 days
   private static readonly SESSION_TTL = 7 * 24 * 60 * 60; // 7 days in seconds
 
   /**
@@ -90,19 +90,24 @@ export class AuthService {
       // Verify JWT token
       const decoded = jwt.verify(token, this.JWT_SECRET) as any;
       
-      if (!decoded.userId || !decoded.sessionId) {
+      if (!decoded.userId) {
         throw createError('Invalid token format', 401);
       }
 
-      // Check if session exists in Redis
-      const sessionKey = `session:${decoded.sessionId}`;
-      const sessionData = await this.getSessionData(sessionKey);
-      
-      if (!sessionData || sessionData.userId !== decoded.userId) {
-        throw createError('Session expired or invalid', 401);
+      // For backward compatibility, check if sessionId exists
+      if (decoded.sessionId) {
+        // Check if session exists in Redis/memory
+        const sessionKey = `session:${decoded.sessionId}`;
+        const sessionData = await this.getSessionData(sessionKey);
+        
+        if (!sessionData || sessionData.userId !== decoded.userId) {
+          // Session expired or invalid, but token might still be valid
+          // Fall back to user lookup if token is not expired
+          console.warn('Session not found, falling back to user lookup');
+        }
       }
 
-      // Get current user data
+      // Get current user data (this is the authoritative check)
       const user = await UserModel.findById(decoded.userId);
       if (!user) {
         throw createError('User not found', 401);
@@ -151,10 +156,15 @@ export class AuthService {
       createdAt: new Date().toISOString()
     };
 
-    // Store session in Redis
-    await setSession(sessionId, sessionData, this.SESSION_TTL);
+    // Try to store session in Redis/memory (optional)
+    try {
+      await setSession(sessionId, sessionData, this.SESSION_TTL);
+    } catch (error) {
+      console.warn('Failed to store session, continuing without session storage:', error);
+      // Continue without session - token will still work via user lookup
+    }
 
-    // Generate JWT token
+    // Generate JWT token with longer expiration for better UX
     const tokenPayload = {
       userId: user.id,
       sessionId: sessionId,
@@ -169,7 +179,7 @@ export class AuthService {
 
     // Calculate expiration date
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7); // 7 days from now
+    expiresAt.setDate(expiresAt.getDate() + 30); // 30 days from now
 
     return {
       token,
